@@ -1,13 +1,9 @@
 package de.dhbw.pricetracker.domain;
 
-public class Platform {
-    String name;
-    String nameIdentifier;
-    String priceIdentifier;
+import java.util.List;
 
-    public Platform(String name, String nameIdentifier, String priceIdentifier) {
-        this.name = name;
-        this.nameIdentifier = nameIdentifier;
-        this.priceIdentifier = priceIdentifier;
-    }
+public interface Platform {
+    public String getName();
+    public String getPriceSelector();
+    public List<Product> getProducts();
 }
