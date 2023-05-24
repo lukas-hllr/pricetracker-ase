@@ -6,11 +6,18 @@ import java.util.List;
 public class CommonProduct implements Product{
     String name;
     String url;
-    ArrayList<Price> prices;
+    List<Price> prices;
 
     public CommonProduct(String name, String url) {
         this.name = name;
         this.url = url;
+        this.prices = new ArrayList();
+    }
+
+    public CommonProduct(String name, String url, List<Price> prices) {
+        this.name = name;
+        this.url = url;
+        this.prices = prices;
     }
 
     @Override

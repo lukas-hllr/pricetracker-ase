@@ -1,5 +1,6 @@
 package de.dhbw.pricetracker.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommonPlatform implements Platform {
@@ -9,8 +10,14 @@ public class CommonPlatform implements Platform {
 
     public CommonPlatform(String name, String priceIdentifier) {
         this.name = name;
-        //this.nameIdentifier = nameIdentifier;
         this.priceIdentifier = priceIdentifier;
+        this.products = new ArrayList();
+    }
+
+    public CommonPlatform(String name, String priceIdentifier, List<Product> products) {
+        this.name = name;
+        this.priceIdentifier = priceIdentifier;
+        this.products = products;
     }
 
     @Override
