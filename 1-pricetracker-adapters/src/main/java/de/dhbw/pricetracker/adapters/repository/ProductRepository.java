@@ -6,6 +6,7 @@ import de.dhbw.pricetracker.application.repository.Repository;
 import de.dhbw.pricetracker.adapters.storage.Storage;
 import de.dhbw.pricetracker.domain.Platform;
 import de.dhbw.pricetracker.domain.Product;
+import de.dhbw.pricetracker.plugins.storage.CsvProductStorage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,12 @@ public class ProductRepository implements Repository<Product> {
     private Storage<Product> productStorage;
     private Repository<Platform> platformRepository;
     private Map<String, Product> products;
+
+    public ProductRepository(Repository<Platform> platformRepository){
+        this.productStorage = new CsvProductStorage();
+        this.platformRepository = platformRepository;
+        this.products = new HashMap();
+    }
 
     public ProductRepository(Storage<Product> productStorage, Repository<Platform> platformRepository){
         this.productStorage = productStorage;
