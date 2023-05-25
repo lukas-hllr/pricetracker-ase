@@ -12,12 +12,12 @@ import java.util.Map;
 
 public class ProductRepository implements Repository<Product> {
 
-    private Storage storage;
-    private PlatformRepository platformRepository;
+    private Storage<Product> productStorage;
+    private Repository<Platform> platformRepository;
     private Map<String, Product> products;
 
-    public ProductRepository(Storage storage, PlatformRepository platformRepository){
-        this.storage = storage;
+    public ProductRepository(Storage<Product> productStorage, Repository<Platform> platformRepository){
+        this.productStorage = productStorage;
         this.platformRepository = platformRepository;
         this.products = new HashMap();
     }
@@ -32,6 +32,7 @@ public class ProductRepository implements Repository<Product> {
         }
 
         this.products.put(entity.getName(), entity);
+        this.productStorage.add(entity);
     }
 
     @Override

@@ -10,11 +10,11 @@ import java.util.Map;
 
 public class PlatformRepository implements Repository<Platform> {
 
-    private Storage storage;
+    private Storage<Platform> platformStorage;
     private Map<String, Platform> platforms;
 
-    public PlatformRepository(Storage storage){
-        this.storage = storage;
+    public PlatformRepository(Storage<Platform> platformStorage){
+        this.platformStorage = platformStorage;
         this.platforms = new HashMap();
     }
     @Override
@@ -24,6 +24,7 @@ public class PlatformRepository implements Repository<Platform> {
         }
 
         this.platforms.put(entity.getName(), entity);
+        this.platformStorage.add(entity);
     }
 
     @Override
