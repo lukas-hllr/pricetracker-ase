@@ -9,6 +9,7 @@ import de.dhbw.pricetracker.domain.Product;
 import de.dhbw.pricetracker.plugins.storage.CsvProductStorage;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ProductRepository implements Repository<Product> {
@@ -20,13 +21,22 @@ public class ProductRepository implements Repository<Product> {
     public ProductRepository(Repository<Platform> platformRepository){
         this.productStorage = new CsvProductStorage();
         this.platformRepository = platformRepository;
-        this.products = new HashMap();
+        initRepository();
     }
 
     public ProductRepository(Storage<Product> productStorage, Repository<Platform> platformRepository){
         this.productStorage = productStorage;
         this.platformRepository = platformRepository;
-        this.products = new HashMap();
+        initRepository();
+    }
+
+    private void initRepository()
+    {
+        List<Product> productList = productStorage.getAll();
+        products = new HashMap();
+        for (Product product: productList) {
+            products.put(product.getName(), product);
+        }
     }
     @Override
     public void add(Product entity) throws DuplicateException, NotFoundException {

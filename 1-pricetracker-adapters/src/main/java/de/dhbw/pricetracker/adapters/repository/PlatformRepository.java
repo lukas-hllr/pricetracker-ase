@@ -4,9 +4,11 @@ import de.dhbw.pricetracker.application.repository.DuplicateException;
 import de.dhbw.pricetracker.application.repository.Repository;
 import de.dhbw.pricetracker.adapters.storage.Storage;
 import de.dhbw.pricetracker.domain.Platform;
+import de.dhbw.pricetracker.domain.Product;
 import de.dhbw.pricetracker.plugins.storage.CsvPlatformStorage;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PlatformRepository implements Repository<Platform> {
@@ -17,12 +19,21 @@ public class PlatformRepository implements Repository<Platform> {
     public PlatformRepository()
     {
         this.platformStorage = new CsvPlatformStorage();
-        this.platforms = new HashMap();
+        initRepository();
     }
     public PlatformRepository(Storage<Platform> platformStorage){
         this.platformStorage = platformStorage;
-        this.platforms = new HashMap();
+        initRepository();
     }
+    private void initRepository()
+    {
+        List<Platform> platformList = platformStorage.getAll();
+        platforms = new HashMap();
+        for (Platform platform: platformList) {
+            platforms.put(platform.getName(), platform);
+        }
+    }
+
     @Override
     public void add(Platform entity) throws DuplicateException {
         if(platforms.containsKey(entity.getName())){
