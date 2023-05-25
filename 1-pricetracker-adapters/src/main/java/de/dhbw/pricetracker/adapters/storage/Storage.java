@@ -1,11 +1,7 @@
-package de.dhbw.pricetracker.application;
+package de.dhbw.pricetracker.adapters.storage;
 
-import de.dhbw.pricetracker.adapters.repository.DuplicateException;
 import de.dhbw.pricetracker.domain.Platform;
 import de.dhbw.pricetracker.domain.Product;
-import de.dhbw.pricetracker.adapters.repository.NotFoundException;
-
-import java.util.Map;
 
 public interface Storage {
 

@@ -1,4 +1,4 @@
-package de.dhbw.pricetracker.adapters.repository;
+package de.dhbw.pricetracker.application.repository;
 
 import java.util.Map;
 

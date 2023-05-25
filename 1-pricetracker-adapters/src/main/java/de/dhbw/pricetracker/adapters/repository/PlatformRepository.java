@@ -1,6 +1,8 @@
 package de.dhbw.pricetracker.adapters.repository;
 
-import de.dhbw.pricetracker.application.Storage;
+import de.dhbw.pricetracker.application.repository.DuplicateException;
+import de.dhbw.pricetracker.application.repository.Repository;
+import de.dhbw.pricetracker.adapters.storage.Storage;
 import de.dhbw.pricetracker.domain.Platform;
 
 import java.util.HashMap;
