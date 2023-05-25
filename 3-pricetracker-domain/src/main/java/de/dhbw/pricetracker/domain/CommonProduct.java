@@ -1,23 +1,26 @@
 package de.dhbw.pricetracker.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CommonProduct implements Product{
     String name;
-    String url;
-    List<Price> prices;
 
-    public CommonProduct(String name, String url) {
+    String url;
+
+    String platform;
+
+    double price;
+
+    public CommonProduct(String name, String platform, String url) {
         this.name = name;
         this.url = url;
-        this.prices = new ArrayList();
+        this.platform = platform;
+        this.price = 0.0;
     }
 
-    public CommonProduct(String name, String url, List<Price> prices) {
+    public CommonProduct(String name, String platform, String url, double price) {
         this.name = name;
         this.url = url;
-        this.prices = prices;
+        this.platform = platform;
+        this.price = price;
     }
 
     @Override
@@ -31,7 +34,21 @@ public class CommonProduct implements Product{
     }
 
     @Override
-    public List<Price> getPrices() {
-        return this.prices;
+    public String getPlatform(){
+        return this.platform;
+    }
+
+    @Override
+    public double getPrice() {
+        return this.price;
+    }
+
+    @Override
+    public void setPrice(double price) {
+        if(price > 0.0){
+            this.price = price;
+        } else {
+            this.price = 0.0;
+        }
     }
 }

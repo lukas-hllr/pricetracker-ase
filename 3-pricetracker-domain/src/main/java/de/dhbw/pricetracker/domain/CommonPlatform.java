@@ -30,8 +30,4 @@ public class CommonPlatform implements Platform {
         return this.priceIdentifier;
     }
 
-    @Override
-    public List<Product> getProducts() {
-        return this.products;
-    }
 }
