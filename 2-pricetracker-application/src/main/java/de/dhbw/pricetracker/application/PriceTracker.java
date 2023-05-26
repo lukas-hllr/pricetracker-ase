@@ -17,21 +17,18 @@ import java.util.Map;
 public class PriceTracker implements UIEventListener
 {
     private UserInterface ui;
-    private Repository<Platform> platformRepository;
-    private Repository<Product> productRepository;
+    private Repository repository;
     private HtmlScraper scraper;
     private TimeKeeper timeKeeper;
 
     public PriceTracker(
             UserInterface ui,
-            Repository<Platform> platformRepository,
-            Repository<Product> productRepository,
+            Repository repository,
             HtmlScraper scraper,
             TimeKeeper timeKeeper
     ) {
         this.ui = ui;
-        this.platformRepository = platformRepository;
-        this.productRepository = productRepository;
+        this.repository = repository;
         this.scraper = scraper;
         this.timeKeeper = timeKeeper;
     }
@@ -47,8 +44,8 @@ public class PriceTracker implements UIEventListener
     @Override
     public void onAddPlatformEvent(Platform platform) {
         try {
-            platformRepository.add(platform);
-        } catch (DuplicateException | NotFoundException e) {
+            repository.addPlatform(platform);
+        } catch (DuplicateException e) {
             ui.error(e.getMessage());
         }
     }
@@ -56,7 +53,7 @@ public class PriceTracker implements UIEventListener
     @Override
     public void onAddProductEvent(Product product) {
         try {
-            productRepository.add(product);
+            repository.addProduct(product);
         } catch (DuplicateException | NotFoundException e) {
             ui.error(e.getMessage());
         }
@@ -64,17 +61,28 @@ public class PriceTracker implements UIEventListener
 
     @Override
     public void onUpdatePriceEvent() {
-        ui.info("Update started.");
-        for (Map.Entry<String, Product> entry : productRepository.getAll().entrySet()) {
+        ui.onUpdateStartedEvent();
+        for (Map.Entry<String, Product> entry : repository.getAllProducts().entrySet()) {
             Product product = entry.getValue();
-            ui.info("Fetching price of \"" + product.getName() + "\"");
+            ui.onUpdateStartedEvent(product);
             try {
                 double newPrice = scraper.scrapePrice(product.getURL(), "");
-                System.out.println(newPrice);
-                ui.info("New Price: " + newPrice);
+                this.handleNewPrice(newPrice, product);
             } catch (IOException | NoPriceFoundException e) {
                 ui.error(e.getMessage());
             }
         }
+    }
+
+    private void handleNewPrice(double newPrice, Product product) {
+        double oldPrice = product.getPrice();
+        if(newPrice > oldPrice){
+            ui.onPriceIncreased(newPrice, product);
+        } else if(newPrice < oldPrice){
+            ui.onPriceDecreased(newPrice, product);
+        } else {
+            ui.onNoPriceChange(product);
+        }
+        product.setPrice(newPrice);
     }
 }
