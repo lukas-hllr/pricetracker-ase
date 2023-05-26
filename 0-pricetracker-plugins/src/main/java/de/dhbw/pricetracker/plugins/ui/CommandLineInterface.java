@@ -22,6 +22,7 @@ public class CommandLineInterface implements UserInterface {
 
     @Override
     public void start() {
+        Console.println(MessageType.SUCCESS, "Willkommen beim PriceTracker!");
         loop:
         while(true){
             String input = Console.read().toLowerCase();
@@ -88,7 +89,9 @@ public class CommandLineInterface implements UserInterface {
         listener.onListPlatformsEvent();
         String input = Console.read("Welche Platform?: ");
         try {
-            Integer.parseInt(input);
+            int index = Integer.parseInt(input);
+            Platform platform = platformContext.get(index);
+            listener.onRemovePlatformEvent(platform);
         } catch (NumberFormatException e){
             inputError(input);
         }
@@ -124,39 +127,33 @@ public class CommandLineInterface implements UserInterface {
     @Override
     public void listProductsEvent(List<Product> products) {
         productContext = products;
-        int i = 0;
-        for (Product product: products) {
+        for (int i = 0; i < products.size(); i++) {
             String header = "(" + i + "):";
             header = trim(header, 6);
 
-            String name = product.getName();
+            String name = products.get(i).getName();
             name = trim(name, 25);
 
-            String platform = product.getPlatform();
+            String platform = products.get(i).getPlatform();
             platform = trim(platform, 20);
 
             Console.print(MessageType.REQUEST, header);
             Console.println(MessageType.INFO, name + " " + platform);
-
-            i++;
         }
     }
 
     @Override
     public void listPlatformsEvent(List<Platform> platforms) {
         platformContext = platforms;
-        int i = 0;
-        for (Platform platform: platforms) {
+        for (int i = 0; i < platforms.size(); i++) {
             String header = "(" + i + "):";
             header = trim(header, 6);
 
-            String name = platform.getName();
+            String name = platforms.get(i).getName();
             name = trim(name, 25);
 
             Console.print(MessageType.REQUEST, header);
             Console.println(MessageType.INFO, name);
-
-            i++;
         }
     }
 

@@ -83,9 +83,10 @@ public class CsvPlatformStorage implements Storage<Platform> {
     public void remove(Platform entity) {
         platformCsv.delete();
         createFileIfMissing(platformCsv);
-        for (Platform platform: platforms) {
+        for (Iterator<Platform> iterator = platforms.iterator(); iterator.hasNext();) {
+            Platform platform = iterator.next();
             if(platform.equals(entity)){
-                platforms.remove(platform);
+                iterator.remove();
             } else {
                 String csvLine = platformToCsvString(entity);
                 appendToFile(platformCsv, csvLine);

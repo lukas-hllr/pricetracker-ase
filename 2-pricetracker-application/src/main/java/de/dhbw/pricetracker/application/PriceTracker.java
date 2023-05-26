@@ -52,7 +52,11 @@ public class PriceTracker implements UIEventListener
 
     @Override
     public void onRemovePlatformEvent(Platform platform) {
-
+        try {
+            repository.removePlatform(platform);
+        } catch (NotFoundException e) {
+            ui.error(e.getMessage());
+        }
     }
 
     @Override
@@ -66,7 +70,11 @@ public class PriceTracker implements UIEventListener
 
     @Override
     public void onRemoveProductEvent(Product product) {
-
+        try {
+            repository.removeProduct(product);
+        } catch (NotFoundException e) {
+            ui.error(e.getMessage());
+        }
     }
 
     @Override

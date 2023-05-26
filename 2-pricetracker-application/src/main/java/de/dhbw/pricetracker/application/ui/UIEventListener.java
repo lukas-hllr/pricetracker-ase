@@ -1,5 +1,6 @@
 package de.dhbw.pricetracker.application.ui;
 
+import de.dhbw.pricetracker.application.repository.NotFoundException;
 import de.dhbw.pricetracker.domain.Platform;
 import de.dhbw.pricetracker.domain.Product;
 

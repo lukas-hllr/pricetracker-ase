@@ -64,13 +64,18 @@ public class CommonRepository implements Repository {
     @Override
     public void removePlatform(Platform platform) throws NotFoundException {
         if(platforms.containsKey(platform.getName())){
-            this.platformStorage.remove(platform);
+            List<Product> toBeRemoved = new ArrayList<>();
             for (Map.Entry<String, Product> productEntry : products.entrySet()) {
                 Product product = productEntry.getValue();
                 if(product.getPlatform().equals(platform.getName())){
-                    removeProduct(product);
+                    toBeRemoved.add(product);
                 }
             }
+            for(Product product: toBeRemoved){
+                removeProduct(product);
+            }
+            this.platformStorage.remove(platform);
+            platforms.remove(platform.getName());
         } else {
             throw new NotFoundException(platform);
         }
@@ -98,7 +103,7 @@ public class CommonRepository implements Repository {
     public void removeProduct(Product product) throws NotFoundException {
         if(products.containsKey(product.getName())){
             this.productStorage.remove(product);
-
+            products.remove(product.getName());
         } else {
             throw new NotFoundException(product);
         }

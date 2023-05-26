@@ -5,9 +5,7 @@ import de.dhbw.pricetracker.domain.CommonProduct;
 import de.dhbw.pricetracker.domain.Product;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringJoiner;
+import java.util.*;
 
 public class CsvProductStorage implements Storage<Product> {
     private static final String csvDelimiter = ";";
@@ -87,9 +85,10 @@ public class CsvProductStorage implements Storage<Product> {
     public void remove(Product entity) {
         productCsv.delete();
         createFileIfMissing(productCsv);
-        for (Product product: products) {
+        for (Iterator<Product> iterator = products.iterator(); iterator.hasNext();) {
+            Product product = iterator.next();
             if(product.equals(entity)){
-                products.remove(product);
+                iterator.remove();
             } else {
                 String csvLine = productToCsvString(entity);
                 appendToFile(productCsv, csvLine);
