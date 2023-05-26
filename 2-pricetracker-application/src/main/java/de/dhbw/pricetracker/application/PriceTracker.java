@@ -72,8 +72,7 @@ public class PriceTracker implements UIEventListener
     @Override
     public void onUpdatePriceEvent() {
         ui.onUpdateStartedEvent();
-        for (Map.Entry<String, Product> entry : repository.getAllProducts().entrySet()) {
-            Product product = entry.getValue();
+        for (Product product : repository.getAllProducts()) {
             ui.onUpdateStartedEvent(product);
             try {
                 double newPrice = scraper.scrapePrice(product.getURL(), "");

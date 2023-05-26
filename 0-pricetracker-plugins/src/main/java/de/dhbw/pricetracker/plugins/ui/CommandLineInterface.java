@@ -9,6 +9,7 @@ import de.dhbw.pricetracker.domain.CommonProduct;
 import de.dhbw.pricetracker.domain.Platform;
 import de.dhbw.pricetracker.domain.Product;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -16,8 +17,8 @@ public class CommandLineInterface implements UserInterface {
 
     UIEventListener listener;
 
-    Map<String, Platform> platformContext;
-    Map<String, Product> productContext;
+    List<Platform> platformContext;
+    List<Product> productContext;
 
     @Override
     public void start() {
@@ -112,25 +113,26 @@ public class CommandLineInterface implements UserInterface {
         listener.onListProductsEvent();
         String input = Console.read("Welches Produkt?: ");
         try {
-            Integer.parseInt(input);
-            Product product = pr
+            int index = Integer.parseInt(input);
+            Product product = productContext.get(index);
+            listener.onRemoveProductEvent(product);
         } catch (NumberFormatException e){
             inputError(input);
         }
     }
 
     @Override
-    public void listProductsEvent(Map<String, Product> products) {
+    public void listProductsEvent(List<Product> products) {
         productContext = products;
         int i = 0;
-        for (Map.Entry<String, Product> productEntry: products.entrySet()) {
+        for (Product product: products) {
             String header = "(" + i + "):";
             header = trim(header, 6);
 
-            String name = productEntry.getKey();
+            String name = product.getName();
             name = trim(name, 25);
 
-            String platform = productEntry.getValue().getPlatform();
+            String platform = product.getPlatform();
             platform = trim(platform, 20);
 
             Console.print(MessageType.REQUEST, header);
@@ -141,14 +143,14 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public void listPlatformsEvent(Map<String, Platform> platforms) {
+    public void listPlatformsEvent(List<Platform> platforms) {
         platformContext = platforms;
         int i = 0;
-        for (Map.Entry<String, Platform> platformEntry: platforms.entrySet()) {
+        for (Platform platform: platforms) {
             String header = "(" + i + "):";
             header = trim(header, 6);
 
-            String name = platformEntry.getKey();
+            String name = platform.getName();
             name = trim(name, 25);
 
             Console.print(MessageType.REQUEST, header);

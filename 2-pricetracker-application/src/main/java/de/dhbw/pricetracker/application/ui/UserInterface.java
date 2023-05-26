@@ -3,6 +3,7 @@ package de.dhbw.pricetracker.application.ui;
 import de.dhbw.pricetracker.domain.Platform;
 import de.dhbw.pricetracker.domain.Product;
 
+import java.util.List;
 import java.util.Map;
 
 public interface UserInterface {
@@ -15,8 +16,8 @@ public interface UserInterface {
     public void helpForAddProductEvent();
     public void addProductEvent();
     public void removeProductEvent();
-    public void listProductsEvent(Map<String, Product> products);
-    public void listPlatformsEvent(Map<String, Platform> platforms);
+    public void listProductsEvent(List<Product> products);
+    public void listPlatformsEvent(List<Platform> platforms);
 
     public void onUpdateStartedEvent();
     public void onUpdateStartedEvent(Product product);

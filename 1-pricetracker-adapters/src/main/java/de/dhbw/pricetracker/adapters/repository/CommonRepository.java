@@ -9,6 +9,7 @@ import de.dhbw.pricetracker.domain.Product;
 import de.dhbw.pricetracker.plugins.storage.CsvPlatformStorage;
 import de.dhbw.pricetracker.plugins.storage.CsvProductStorage;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,8 +77,8 @@ public class CommonRepository implements Repository {
     }
 
     @Override
-    public Map<String, Platform> getAllPlatforms() {
-        return platforms;
+    public List<Platform> getAllPlatforms() {
+        return new ArrayList<>(platforms.values());
     }
 
     @Override
@@ -104,7 +105,7 @@ public class CommonRepository implements Repository {
     }
 
     @Override
-    public Map<String, Product> getAllProducts() {
-        return products;
+    public List<Product> getAllProducts() {
+        return new ArrayList<>(products.values());
     }
 }

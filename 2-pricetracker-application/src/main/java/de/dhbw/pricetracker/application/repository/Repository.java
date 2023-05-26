@@ -3,6 +3,7 @@ package de.dhbw.pricetracker.application.repository;
 import de.dhbw.pricetracker.domain.Platform;
 import de.dhbw.pricetracker.domain.Product;
 
+import java.util.List;
 import java.util.Map;
 
 public interface Repository {
@@ -11,6 +12,6 @@ public interface Repository {
     public void removePlatform(Platform platform) throws NotFoundException;
     public void removeProduct(Product product) throws NotFoundException;
 
-    public Map<String, Platform> getAllPlatforms();
-    public Map<String, Product> getAllProducts();
+    public List<Platform> getAllPlatforms();
+    public List<Product> getAllProducts();
 }
