@@ -72,7 +72,6 @@ public class CsvProductStorage implements Storage<Product> {
         return joiner.toString();
     }
 
-
     @Override
     public List<Product> getAll() {
         return products;
@@ -82,5 +81,19 @@ public class CsvProductStorage implements Storage<Product> {
     public void add(Product entity) {
         String csvLine = productToCsvString(entity);
         appendToFile(productCsv, csvLine);
+    }
+
+    @Override
+    public void remove(Product entity) {
+        productCsv.delete();
+        createFileIfMissing(productCsv);
+        for (Product product: products) {
+            if(product.equals(entity)){
+                products.remove(product);
+            } else {
+                String csvLine = productToCsvString(entity);
+                appendToFile(productCsv, csvLine);
+            }
+        }
     }
 }

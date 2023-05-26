@@ -78,4 +78,18 @@ public class CsvPlatformStorage implements Storage<Platform> {
         String csvLine = platformToCsvString(entity);
         appendToFile(platformCsv, csvLine);
     }
+
+    @Override
+    public void remove(Platform entity) {
+        platformCsv.delete();
+        createFileIfMissing(platformCsv);
+        for (Platform platform: platforms) {
+            if(platform.equals(entity)){
+                platforms.remove(platform);
+            } else {
+                String csvLine = platformToCsvString(entity);
+                appendToFile(platformCsv, csvLine);
+            }
+        }
+    }
 }

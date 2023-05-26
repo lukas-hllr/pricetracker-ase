@@ -1,5 +1,7 @@
 package de.dhbw.pricetracker.domain;
 
+import java.util.Objects;
+
 public class CommonProduct implements Product{
     String name;
 
@@ -50,5 +52,18 @@ public class CommonProduct implements Product{
         } else {
             this.price = 0.0;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CommonProduct that = (CommonProduct) o;
+        return Objects.equals(name, that.name) && Objects.equals(url, that.url) && Objects.equals(platform, that.platform);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, url, platform);
     }
 }
