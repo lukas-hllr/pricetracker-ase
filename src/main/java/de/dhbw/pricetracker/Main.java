@@ -19,11 +19,16 @@ import de.dhbw.pricetracker.plugins.ui.CommandLineInterface;
 
 public class Main {
     public static void main(String[] args) {
-        UserInterface ui = new CommandLineInterface();
-        Repository<Platform> platformRepository = new PlatformRepository();
-        Repository<Product> productRepository = new ProductRepository(platformRepository);
-        HtmlScraper scraper = new RegexHtmlScraper();
-        TimeKeeper timeKeeper = new ThreadedTimeKeeper();
+        UserInterface ui =
+                new CommandLineInterface();
+        Repository<Platform> platformRepository =
+                new PlatformRepository();
+        Repository<Product> productRepository =
+                new ProductRepository(platformRepository);
+        HtmlScraper scraper =
+                new RegexHtmlScraper();
+        TimeKeeper timeKeeper =
+                new ThreadedTimeKeeper();
 
         PriceTracker pt = new PriceTracker(
                 ui,
