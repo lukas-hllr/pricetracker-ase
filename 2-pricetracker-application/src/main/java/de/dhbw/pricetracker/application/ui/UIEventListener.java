@@ -7,5 +7,7 @@ public interface UIEventListener
 {
     public void onAddPlatformEvent(Platform platform);
     public void onAddProductEvent(Product product);
+
+    public void onUpdatePriceEvent();
     //public void onPriceChangeEvent(double oldPrice, Product product);
 }
