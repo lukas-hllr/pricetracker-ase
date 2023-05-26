@@ -9,6 +9,8 @@ import de.dhbw.pricetracker.domain.CommonProduct;
 import de.dhbw.pricetracker.domain.Platform;
 import de.dhbw.pricetracker.domain.Product;
 
+import java.util.Locale;
+
 public class CommandLineInterface implements UserInterface {
 
     UIEventListener listener;
@@ -20,7 +22,7 @@ public class CommandLineInterface implements UserInterface {
 
             if (input.equals("add platform")){
                 addPlatformEvent();
-            } else if (input.equals("add platform")){
+            } else if (input.equals("add product")){
                 addProductEvent();
             } else if (input.equals("add platform --help")){
                 helpForAddPlatformEvent();
@@ -68,6 +70,43 @@ public class CommandLineInterface implements UserInterface {
 
         Product product = new CommonProduct(name, platform, url);
         listener.onAddProductEvent(product);
+    }
+
+    @Override
+    public void onUpdateStartedEvent() {
+        Console.println(MessageType.INFO, "\nUpdate begonnen.");
+    }
+
+    @Override
+    public void onUpdateStartedEvent(Product product) {
+        String name = product.getName();
+        if(name.length() > 15){
+            name = name.substring(0, 15) + "...";
+        }
+        Console.print(MessageType.INFO, "Preis von \"" + name + "\" holen ... ");
+    }
+
+    @Override
+    public void onPriceIncreased(double newPrice, Product product) {
+        double oldPrice = product.getPrice();
+        double priceIncrease = Math.abs(newPrice - oldPrice);
+        Console.print(MessageType.INFO, "-> Preissteigerung um ");
+        Console.print(MessageType.ERROR, String.format(Locale.US, "%.2f", priceIncrease));
+        Console.println(MessageType.INFO, ". neuer Preis: " + newPrice);
+    }
+
+    @Override
+    public void onPriceDecreased(double newPrice, Product product) {
+        double oldPrice = product.getPrice();
+        double priceDecrease = Math.abs(newPrice - oldPrice);
+        Console.print(MessageType.INFO, "-> Preissenkung um ");
+        Console.print(MessageType.SUCCESS, String.format("%f.2", priceDecrease));
+        Console.println(MessageType.INFO, ". neuer Preis: " + newPrice);
+    }
+
+    @Override
+    public void onNoPriceChange(Product product) {
+        Console.println(MessageType.INFO, "-> Keine Veränderung");
     }
 
     @Override
