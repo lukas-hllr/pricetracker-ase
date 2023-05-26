@@ -51,12 +51,22 @@ public class PriceTracker implements UIEventListener
     }
 
     @Override
+    public void onRemovePlatformEvent(Platform platform) {
+
+    }
+
+    @Override
     public void onAddProductEvent(Product product) {
         try {
             repository.addProduct(product);
         } catch (DuplicateException | NotFoundException e) {
             ui.error(e.getMessage());
         }
+    }
+
+    @Override
+    public void onRemoveProductEvent(Product product) {
+
     }
 
     @Override
@@ -72,6 +82,17 @@ public class PriceTracker implements UIEventListener
                 ui.error(e.getMessage());
             }
         }
+    }
+
+    @Override
+    public void onListProductsEvent() {
+        ui.listProductsEvent(repository.getAllProducts());
+    }
+
+    @Override
+    public void onListPlatformsEvent() {
+        ui.listPlatformsEvent(repository.getAllPlatforms());
+
     }
 
     private void handleNewPrice(double newPrice, Product product) {

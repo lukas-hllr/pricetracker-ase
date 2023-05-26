@@ -10,28 +10,51 @@ import de.dhbw.pricetracker.domain.Platform;
 import de.dhbw.pricetracker.domain.Product;
 
 import java.util.Locale;
+import java.util.Map;
 
 public class CommandLineInterface implements UserInterface {
 
     UIEventListener listener;
 
+    Map<String, Platform> platformContext;
+    Map<String, Product> productContext;
+
     @Override
     public void start() {
+        loop:
         while(true){
             String input = Console.read().toLowerCase();
 
-            if (input.equals("add platform")){
-                addPlatformEvent();
-            } else if (input.equals("add product")){
-                addProductEvent();
-            } else if (input.equals("add platform --help")){
-                helpForAddPlatformEvent();
-            } else if (input.equals("add product --help")){
-                helpForAddProductEvent();
-            } else if(input.equals("exit")){
-                break;
-            } else {
-                Console.println(MessageType.ERROR, "unbekannter Befehl \"" + input + "\"");
+            switch (input) {
+                case "platforms add":
+                    addPlatformEvent();
+                    break;
+                case "platforms remove":
+                    removePlatformEvent();
+                    break;
+                case "platforms list":
+                    listener.onListPlatformsEvent();
+                    break;
+                case "products add":
+                    addProductEvent();
+                    break;
+                case "products remove":
+                    removeProductEvent();
+                    break;
+                case "products list":
+                    listener.onListProductsEvent();
+                    break;
+                case "platforms add --help":
+                    helpForAddPlatformEvent();
+                    break;
+                case "products add --help":
+                    helpForAddProductEvent();
+                    break;
+                case "exit":
+                    break loop;
+                default:
+                    inputError(input);
+                    break;
             }
         }
     }
@@ -59,6 +82,18 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
+    public void removePlatformEvent() {
+        Console.println(MessageType.WARN, "Achtung: Alle dazugehörigen Produkte werden ebenfalls gelöscht!");
+        listener.onListPlatformsEvent();
+        String input = Console.read("Welche Platform?: ");
+        try {
+            Integer.parseInt(input);
+        } catch (NumberFormatException e){
+            inputError(input);
+        }
+    }
+
+    @Override
     public void helpForAddProductEvent() {
     }
 
@@ -73,6 +108,57 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
+    public void removeProductEvent() {
+        listener.onListProductsEvent();
+        String input = Console.read("Welches Produkt?: ");
+        try {
+            Integer.parseInt(input);
+            Product product = pr
+        } catch (NumberFormatException e){
+            inputError(input);
+        }
+    }
+
+    @Override
+    public void listProductsEvent(Map<String, Product> products) {
+        productContext = products;
+        int i = 0;
+        for (Map.Entry<String, Product> productEntry: products.entrySet()) {
+            String header = "(" + i + "):";
+            header = trim(header, 6);
+
+            String name = productEntry.getKey();
+            name = trim(name, 25);
+
+            String platform = productEntry.getValue().getPlatform();
+            platform = trim(platform, 20);
+
+            Console.print(MessageType.REQUEST, header);
+            Console.println(MessageType.INFO, name + " " + platform);
+
+            i++;
+        }
+    }
+
+    @Override
+    public void listPlatformsEvent(Map<String, Platform> platforms) {
+        platformContext = platforms;
+        int i = 0;
+        for (Map.Entry<String, Platform> platformEntry: platforms.entrySet()) {
+            String header = "(" + i + "):";
+            header = trim(header, 6);
+
+            String name = platformEntry.getKey();
+            name = trim(name, 25);
+
+            Console.print(MessageType.REQUEST, header);
+            Console.println(MessageType.INFO, name);
+
+            i++;
+        }
+    }
+
+    @Override
     public void onUpdateStartedEvent() {
         Console.println(MessageType.INFO, "\nUpdate begonnen.");
     }
@@ -80,9 +166,7 @@ public class CommandLineInterface implements UserInterface {
     @Override
     public void onUpdateStartedEvent(Product product) {
         String name = product.getName();
-        if(name.length() > 15){
-            name = name.substring(0, 15) + "...";
-        }
+        name = trim(name, 20);
         Console.print(MessageType.INFO, "Preis von \"" + name + "\" holen ... ");
     }
 
@@ -127,5 +211,16 @@ public class CommandLineInterface implements UserInterface {
     @Override
     public void warning(String message) {
         Console.println(MessageType.WARN, message);
+    }
+
+    private String trim(String string, int length){
+        if(string.length() > length){
+            string = string.substring(0, length-3) + "...";
+        }
+        return String.format("%-" + length + "s", string);
+    }
+
+    private void inputError(String input) {
+        Console.println(MessageType.ERROR, "Unzulässige Eingabe \"" + input + "\"");
     }
 }
