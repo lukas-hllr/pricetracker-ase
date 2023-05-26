@@ -36,19 +36,17 @@ public class RegexHtmlScraper implements HtmlScraper
     {
         InputStream html = client.getHtml(url);
         String price = scrape(html);
-        System.out.println(price);
-
         double parsedPrice = parse(price);
-
         return parsedPrice;
     }
 
     private double parse(String price) {
-        if(price.charAt(price.length()-3) == '.' || price.charAt(price.length()-4) == ','){
+        if(price.charAt(price.length()-3) == ',' || price.charAt(price.length()-4) == '.'){
             price = price.replace(".", "");
             price = price.replace(",", ".");
         }
-        return Double.parseDouble(price);
+        double parsedPrice = Double.parseDouble(price);
+        return parsedPrice;
     }
 
     private static String scrape(InputStream html) throws NoPriceFoundException
