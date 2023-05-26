@@ -8,6 +8,11 @@ import de.dhbw.pricetracker.plugins.network.CommonWebClient;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -31,8 +36,19 @@ public class RegexHtmlScraper implements HtmlScraper
     {
         InputStream html = client.getHtml(url);
         String price = scrape(html);
+        System.out.println(price);
 
-        return Double.valueOf(price);
+        double parsedPrice = parse(price);
+
+        return parsedPrice;
+    }
+
+    private double parse(String price) {
+        if(price.charAt(price.length()-3) == '.' || price.charAt(price.length()-4) == ','){
+            price = price.replace(".", "");
+            price = price.replace(",", ".");
+        }
+        return Double.parseDouble(price);
     }
 
     private static String scrape(InputStream html) throws NoPriceFoundException
