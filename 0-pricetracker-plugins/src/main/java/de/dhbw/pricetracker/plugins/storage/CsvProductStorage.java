@@ -85,6 +85,7 @@ public class CsvProductStorage implements Storage<Product> {
 
     @Override
     public void add(Product entity) {
+        products.add(entity);
         String csvLine = productToCsvString(entity);
         appendToFile(productCsv, csvLine);
     }
@@ -93,14 +94,10 @@ public class CsvProductStorage implements Storage<Product> {
     public void remove(Product entity) {
         productCsv.delete();
         createFileIfMissing(productCsv);
-        for (Iterator<Product> iterator = products.iterator(); iterator.hasNext();) {
-            Product product = iterator.next();
-            if(product.equals(entity)){
-                iterator.remove();
-            } else {
-                String csvLine = productToCsvString(entity);
-                appendToFile(productCsv, csvLine);
-            }
+        products.remove(entity);
+        for (Product product: products) {
+            String csvLine = productToCsvString(product);
+            appendToFile(productCsv, csvLine);
         }
     }
 }
