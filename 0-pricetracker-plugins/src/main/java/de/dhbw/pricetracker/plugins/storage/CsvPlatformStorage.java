@@ -24,7 +24,7 @@ public class CsvPlatformStorage implements Storage<Platform> {
         readPlatformsFromCsv();
     }
     public CsvPlatformStorage(File csvFile, String csvDelimiter){
-        this.platforms = new ArrayList();
+        this.platforms = new ArrayList<>();
         this.platformCsv = csvFile;
         this.csvDelimiter = csvDelimiter;
         createFileIfMissing(platformCsv);
@@ -83,6 +83,7 @@ public class CsvPlatformStorage implements Storage<Platform> {
 
     @Override
     public void add(Platform entity){
+        platforms.add(entity);
         String csvLine = platformToCsvString(entity);
         appendToFile(platformCsv, csvLine);
     }
@@ -91,14 +92,10 @@ public class CsvPlatformStorage implements Storage<Platform> {
     public void remove(Platform entity) {
         platformCsv.delete();
         createFileIfMissing(platformCsv);
-        for (Iterator<Platform> iterator = platforms.iterator(); iterator.hasNext();) {
-            Platform platform = iterator.next();
-            if(platform.equals(entity)){
-                iterator.remove();
-            } else {
-                String csvLine = platformToCsvString(entity);
-                appendToFile(platformCsv, csvLine);
-            }
+        platforms.remove(entity);
+        for (Platform platform: platforms) {
+            String csvLine = platformToCsvString(platform);
+            appendToFile(platformCsv, csvLine);
         }
     }
 }
