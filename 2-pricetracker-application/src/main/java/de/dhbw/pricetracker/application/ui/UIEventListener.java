@@ -15,4 +15,7 @@ public interface UIEventListener
     public void onUpdatePriceEvent();
     public void onListProductsEvent();
     public void onListPlatformsEvent();
+    public void onListCurrenciesEvent();
+    public void onListPricesRequestedEvent();
+    public void onListPricesEvent(Product product);
 }

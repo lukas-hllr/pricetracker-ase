@@ -5,8 +5,10 @@ import de.dhbw.pricetracker.application.repository.DuplicateException;
 import de.dhbw.pricetracker.application.repository.NotFoundException;
 import de.dhbw.pricetracker.application.repository.Repository;
 import de.dhbw.pricetracker.domain.Platform;
+import de.dhbw.pricetracker.domain.Price;
 import de.dhbw.pricetracker.domain.Product;
 import de.dhbw.pricetracker.plugins.storage.CsvPlatformStorage;
+import de.dhbw.pricetracker.plugins.storage.CsvPriceStorage;
 import de.dhbw.pricetracker.plugins.storage.CsvProductStorage;
 
 import java.util.ArrayList;
@@ -18,15 +20,19 @@ public class CommonRepository implements Repository {
 
     private Storage<Platform> platformStorage;
     private Storage<Product> productStorage;
+    private Storage<Price> priceStorage;
     private Map<String, Platform> platforms;
     private Map<String, Product> products;
+    private List<Price> prices;
 
     public CommonRepository()
     {
         this.platformStorage = new CsvPlatformStorage();
         this.productStorage = new CsvProductStorage();
+        this.priceStorage = new CsvPriceStorage();
         initPlatformRepository();
         initProductRepository();
+        initPriceRepository();
     }
     public CommonRepository(Storage<Platform> platformStorage, Storage<Product> productStorage){
         this.platformStorage = platformStorage;
@@ -50,6 +56,11 @@ public class CommonRepository implements Repository {
         for (Product product: productList) {
             products.put(product.getName(), product);
         }
+    }
+
+    private void initPriceRepository()
+    {
+        prices = priceStorage.getAll();
     }
 
     @Override
@@ -93,11 +104,23 @@ public class CommonRepository implements Repository {
             throw new DuplicateException(entity);
         }
         if(!platforms.containsKey(entity.getPlatform())){
-            throw new NotFoundException(entity.getPlatform());
+            throw new NotFoundException(Platform.class, entity.getPlatform());
         }
 
         this.products.put(entity.getName(), entity);
         this.productStorage.add(entity);
+    }
+
+    @Override
+    public void addPrice(Price price) throws NotFoundException
+    {
+        if(!products.containsKey(price.product())){
+            throw new NotFoundException(Product.class, price.product());
+        }
+
+        this.prices.add(price);
+        this.priceStorage.add(price);
+
     }
 
     @Override
@@ -113,5 +136,17 @@ public class CommonRepository implements Repository {
     @Override
     public List<Product> getAllProducts() {
         return new ArrayList<>(products.values());
+    }
+
+    @Override
+    public List<Price> getPricesOfProduct(Product product)
+    {
+        List<Price> pricesOfProduct = new ArrayList<>();
+        for (Price price : prices) {
+            if(price.product().equals(product.getName())){
+                pricesOfProduct.add(price);
+            }
+        }
+        return pricesOfProduct;
     }
 }

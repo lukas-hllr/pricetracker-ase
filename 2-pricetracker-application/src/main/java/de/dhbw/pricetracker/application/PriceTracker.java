@@ -9,6 +9,7 @@ import de.dhbw.pricetracker.application.timekeeper.TimeKeeper;
 import de.dhbw.pricetracker.application.ui.UIEventListener;
 import de.dhbw.pricetracker.application.ui.UserInterface;
 import de.dhbw.pricetracker.domain.Platform;
+import de.dhbw.pricetracker.domain.Price;
 import de.dhbw.pricetracker.domain.Product;
 
 import java.io.IOException;
@@ -87,7 +88,8 @@ public class PriceTracker implements UIEventListener
         for (Product product : repository.getAllProducts()) {
             ui.onUpdateStartedEvent(product);
             try {
-                double newPrice = scraper.scrapePrice(product.getURL(), "");
+                double priceValue = scraper.scrapePrice(product.getURL(), "");
+                Price newPrice = new Price(product.getName(), priceValue, product.getCurrency());
                 this.handleNewPrice(newPrice, product);
             } catch (IOException | NoPriceFoundException e) {
                 ui.onError(e);
@@ -105,15 +107,41 @@ public class PriceTracker implements UIEventListener
         ui.listPlatformsEvent(repository.getAllPlatforms());
     }
 
-    private void handleNewPrice(double newPrice, Product product) {
-        double oldPrice = product.getPrice();
-        if(newPrice > oldPrice){
-            ui.onPriceIncreased(newPrice, product);
-        } else if(newPrice < oldPrice){
-            ui.onPriceDecreased(newPrice, product);
-        } else {
-            ui.onNoPriceChange(product);
+    @Override
+    public void onListCurrenciesEvent()
+    {
+
+    }
+
+    @Override
+    public void onListPricesRequestedEvent()
+    {
+        Product product = ui.onRequestProduct(repository.getAllProducts());
+        ui.listPricesEvent(repository.getPricesOfProduct(product));
+    }
+
+    @Override
+    public void onListPricesEvent(Product product)
+    {
+
+    }
+
+    private void handleNewPrice(Price newPrice, Product product) {
+        Price oldPrice = product.getPrice();
+        try {
+            if (newPrice.value() > oldPrice.value()) {
+                ui.onPriceIncreased(newPrice, product);
+                product.setPrice(newPrice);
+                repository.addPrice(newPrice);
+            } else if (newPrice.value() < oldPrice.value()) {
+                ui.onPriceDecreased(newPrice, product);
+                product.setPrice(newPrice);
+                repository.addPrice(newPrice);
+            } else {
+                ui.onNoPriceChange(product);
+            }
+        } catch (NotFoundException e){
+            ui.onError(e);
         }
-        product.setPrice(newPrice);
     }
 }

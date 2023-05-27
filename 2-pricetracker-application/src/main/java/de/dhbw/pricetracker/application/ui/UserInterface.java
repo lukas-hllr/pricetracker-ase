@@ -1,6 +1,8 @@
 package de.dhbw.pricetracker.application.ui;
 
+import de.dhbw.pricetracker.domain.Currency;
 import de.dhbw.pricetracker.domain.Platform;
+import de.dhbw.pricetracker.domain.Price;
 import de.dhbw.pricetracker.domain.Product;
 
 import java.util.List;
@@ -18,13 +20,17 @@ public interface UserInterface {
     public void removeProductEvent();
     public void listProductsEvent(List<Product> products);
     public void listPlatformsEvent(List<Platform> platforms);
+    public void listPricesEvent(List<Price> prices);
+    public void listCurrenciesEvent(List<Currency> currencies);
 
     public void onUpdateStartedEvent();
     public void onUpdateStartedEvent(Product product);
-    public void onPriceIncreased(double newPrice, Product product);
-    public void onPriceDecreased(double newPrice, Product product);
+    public void onPriceIncreased(Price newPrice, Product product);
+    public void onPriceDecreased(Price newPrice, Product product);
     public void onNoPriceChange(Product product);
 
     public void onSuccess();
     public void onError(Exception e);
+
+    public Product onRequestProduct(List<Product> allProducts);
 }

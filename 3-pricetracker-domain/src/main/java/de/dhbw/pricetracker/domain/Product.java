@@ -6,6 +6,7 @@ public interface Product {
     public String getName();
     public String getURL();
     public String getPlatform();
-    public double getPrice();
-    public void setPrice(double price);
+    public Currency getCurrency();
+    public Price getPrice();
+    public void setPrice(Price price);
 }

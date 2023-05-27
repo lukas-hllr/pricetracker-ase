@@ -4,10 +4,7 @@ import de.dhbw.pricetracker.adapters.storage.Storage;
 import de.dhbw.pricetracker.application.repository.DuplicateException;
 import de.dhbw.pricetracker.application.repository.NotFoundException;
 import de.dhbw.pricetracker.application.repository.Repository;
-import de.dhbw.pricetracker.domain.CommonPlatform;
-import de.dhbw.pricetracker.domain.CommonProduct;
-import de.dhbw.pricetracker.domain.Platform;
-import de.dhbw.pricetracker.domain.Product;
+import de.dhbw.pricetracker.domain.*;
 import de.dhbw.pricetracker.plugins.storage.CsvPlatformStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,11 +25,11 @@ class CommonRepositoryTest {
     };
 
     static Product[] testProducts = new Product[]{
-            new CommonProduct("TestProduct0", "TestPlatform0", "url0"),
-            new CommonProduct("TestProduct1", "TestPlatform0", "url1"),
-            new CommonProduct("TestProduct2", "TestPlatform1", "url2"),
-            new CommonProduct("TestProduct3", "TestPlatform1", "url3"),
-            new CommonProduct("TestProduct4", "TestPlatform2", "url4"),
+            new CommonProduct("TestProduct0", "TestPlatform0", "url0", Currency.EURO),
+            new CommonProduct("TestProduct1", "TestPlatform0", "url1", Currency.US_DOLLAR),
+            new CommonProduct("TestProduct2", "TestPlatform1", "url2", Currency.YEN),
+            new CommonProduct("TestProduct3", "TestPlatform1", "url3", Currency.YUAN),
+            new CommonProduct("TestProduct4", "TestPlatform2", "url4", Currency.EURO),
     };
     @BeforeEach
     void setUp() {

@@ -4,11 +4,10 @@ import de.dhbw.pricetracker.adapters.Console;
 import de.dhbw.pricetracker.application.MessageType;
 import de.dhbw.pricetracker.application.ui.UIEventListener;
 import de.dhbw.pricetracker.application.ui.UserInterface;
-import de.dhbw.pricetracker.domain.CommonPlatform;
-import de.dhbw.pricetracker.domain.CommonProduct;
-import de.dhbw.pricetracker.domain.Platform;
-import de.dhbw.pricetracker.domain.Product;
+import de.dhbw.pricetracker.domain.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,6 +17,7 @@ public class CommandLineInterface implements UserInterface {
 
     List<Platform> platformContext;
     List<Product> productContext;
+    List<Currency> currencyContext;
 
     @Override
     public void start() {
@@ -44,6 +44,9 @@ public class CommandLineInterface implements UserInterface {
                     break;
                 case "products list":
                     listener.onListProductsEvent();
+                    break;
+                case "prices list":
+                    listener.onListPricesRequestedEvent();
                     break;
                 case "platforms add --help":
                     helpForAddPlatformEvent();
@@ -112,8 +115,9 @@ public class CommandLineInterface implements UserInterface {
         String name = Console.read("Name: ");
         String platform = Console.read("Platform: ");
         String url = Console.read("URL: ");
+        Currency currency = Currency.valueOf(Console.read("Currency: "));
 
-        Product product = new CommonProduct(name, platform, url);
+        Product product = new CommonProduct(name, platform, url, currency);
         listener.onAddProductEvent(product);
     }
 
@@ -164,6 +168,36 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
+    public void listPricesEvent(List<Price> prices)
+    {
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        for (Price price : prices) {
+            String header = dateFormat.format(price.timestamp());
+
+            String priceString = String.format("%10s", price);
+
+            Console.print(MessageType.REQUEST, header);
+            Console.println(MessageType.INFO, priceString);
+        }
+    }
+
+    @Override
+    public void listCurrenciesEvent(List<Currency> currencies)
+    {
+        currencyContext = currencies;
+        for (int i = 0; i < currencies.size(); i++) {
+            String header = "(" + i + "):";
+            header = trim(header, 6);
+
+            String name = currencies.get(i).name();
+            name = trim(name, 25);
+
+            Console.print(MessageType.REQUEST, header);
+            Console.println(MessageType.INFO, name);
+        }
+    }
+
+    @Override
     public void onUpdateStartedEvent() {
         Console.println(MessageType.INFO, "\nUpdate begonnen.");
     }
@@ -171,23 +205,22 @@ public class CommandLineInterface implements UserInterface {
     @Override
     public void onUpdateStartedEvent(Product product) {
         String name = product.getName();
-        name = trim(name, 20);
         Console.print(MessageType.INFO, "Preis von \"" + name + "\" holen ... ");
     }
 
     @Override
-    public void onPriceIncreased(double newPrice, Product product) {
-        double oldPrice = product.getPrice();
-        double priceIncrease = Math.abs(newPrice - oldPrice);
+    public void onPriceIncreased(Price newPrice, Product product) {
+        Price oldPrice = product.getPrice();
+        double priceIncrease = Math.abs(newPrice.value() - oldPrice.value());
         Console.print(MessageType.INFO, "-> Preissteigerung um ");
-        Console.print(MessageType.ERROR, String.format(Locale.US, "%.2f", priceIncrease));
+        Console.print(MessageType.ERROR, String.format(Locale.US, "%.2f %s", priceIncrease, product.getCurrency().getSymbol()));
         Console.println(MessageType.INFO, ". neuer Preis: " + newPrice);
     }
 
     @Override
-    public void onPriceDecreased(double newPrice, Product product) {
-        double oldPrice = product.getPrice();
-        double priceDecrease = Math.abs(newPrice - oldPrice);
+    public void onPriceDecreased(Price newPrice, Product product) {
+        Price oldPrice = product.getPrice();
+        double priceDecrease = Math.abs(newPrice.value() - oldPrice.value());
         Console.print(MessageType.INFO, "-> Preissenkung um ");
         Console.print(MessageType.SUCCESS, String.format("%f.2", priceDecrease));
         Console.println(MessageType.INFO, ". neuer Preis: " + newPrice);
@@ -206,6 +239,21 @@ public class CommandLineInterface implements UserInterface {
     @Override
     public void onError(Exception e) {
         Console.println(MessageType.ERROR, e.getMessage());
+    }
+
+    @Override
+    public Product onRequestProduct(List<Product> allProducts)
+    {
+        listProductsEvent(allProducts);
+        String input = Console.read("Welches Produkt?: ");
+        try {
+            int index = Integer.parseInt(input);
+            Product product = productContext.get(index);
+            return product;
+        } catch (NumberFormatException e){
+            inputError(input);
+        }
+        return null; //TODO
     }
 
     private String trim(String string, int length){

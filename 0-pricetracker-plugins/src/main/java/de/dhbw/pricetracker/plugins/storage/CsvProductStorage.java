@@ -1,6 +1,7 @@
 package de.dhbw.pricetracker.plugins.storage;
 
 import de.dhbw.pricetracker.domain.CommonProduct;
+import de.dhbw.pricetracker.domain.Currency;
 import de.dhbw.pricetracker.domain.Product;
 
 import java.io.File;
@@ -9,7 +10,8 @@ import java.util.StringJoiner;
 public class CsvProductStorage extends CsvStorage<Product> {
 
     public CsvProductStorage(){
-        super();
+        super(new File(System.getProperty("user.home"),"pricetracker_products.csv"), ";");
+
     }
 
     public CsvProductStorage(File csvFile, String csvDelimiter){
@@ -22,7 +24,7 @@ public class CsvProductStorage extends CsvStorage<Product> {
         joiner.add(entity.getName());
         joiner.add(entity.getPlatform());
         joiner.add(entity.getURL());
-        joiner.add(String.valueOf(entity.getPrice()));
+        joiner.add(entity.getCurrency().name());
         return joiner.toString();
     }
 
@@ -33,8 +35,8 @@ public class CsvProductStorage extends CsvStorage<Product> {
         String name = values[0];
         String platform = values[1];
         String url = values[2];
-        double price = Double.parseDouble(values[3]);
+        Currency currency = Currency.valueOf(values[3]);
 
-        return new CommonProduct(name, platform, url, price);
+        return new CommonProduct(name, platform, url, currency);
     }
 }
