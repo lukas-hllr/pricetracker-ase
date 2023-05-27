@@ -9,16 +9,24 @@ import java.io.*;
 import java.util.*;
 
 public class CsvPlatformStorage implements Storage<Platform> {
-    private static final String csvDelimiter = ";";
-    private static final String directory = System.getProperty("user.home");
-    private static final String filename = "pricetracker_platform.csv";
-
+    private String csvDelimiter;
     private File platformCsv;
     private List<Platform> platforms;
 
     public CsvPlatformStorage(){
+        String directory = System.getProperty("user.home");
+        String filename = "pricetracker_platform.csv";
+
         this.platforms = new ArrayList();
         this.platformCsv = new File(directory, filename);
+        this.csvDelimiter = ";";
+        createFileIfMissing(platformCsv);
+        readPlatformsFromCsv();
+    }
+    public CsvPlatformStorage(File csvFile, String csvDelimiter){
+        this.platforms = new ArrayList();
+        this.platformCsv = csvFile;
+        this.csvDelimiter = csvDelimiter;
         createFileIfMissing(platformCsv);
         readPlatformsFromCsv();
     }

@@ -8,17 +8,25 @@ import java.io.*;
 import java.util.*;
 
 public class CsvProductStorage implements Storage<Product> {
-    private static final String csvDelimiter = ";";
-    private static final String directory = System.getProperty("user.home");
-    private static final String filename = "pricetracker_product.csv";
-
+    private String csvDelimiter;
     private File productCsv;
     private List<Product> products;
 
 
     public CsvProductStorage(){
+        String directory = System.getProperty("user.home");
+        String filename = "pricetracker_product.csv";
+
         this.products = new ArrayList();
-        productCsv = new File(directory, filename);
+        this.productCsv = new File(directory, filename);
+        this.csvDelimiter = ";";
+        createFileIfMissing(productCsv);
+        readProductsFromCsv();
+    }
+    public CsvProductStorage(File csvFile, String csvDelimiter){
+        this.products = new ArrayList();
+        this.productCsv = csvFile;
+        this.csvDelimiter = csvDelimiter;
         createFileIfMissing(productCsv);
         readProductsFromCsv();
     }
