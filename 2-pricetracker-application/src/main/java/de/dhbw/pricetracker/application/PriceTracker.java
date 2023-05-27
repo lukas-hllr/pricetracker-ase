@@ -16,10 +16,10 @@ import java.util.Map;
 
 public class PriceTracker implements UIEventListener
 {
-    private UserInterface ui;
-    private Repository repository;
-    private HtmlScraper scraper;
-    private TimeKeeper timeKeeper;
+    private final UserInterface ui;
+    private final Repository repository;
+    private final HtmlScraper scraper;
+    private final TimeKeeper timeKeeper;
 
     public PriceTracker(
             UserInterface ui,
@@ -45,8 +45,9 @@ public class PriceTracker implements UIEventListener
     public void onAddPlatformEvent(Platform platform) {
         try {
             repository.addPlatform(platform);
+            ui.onSuccess();
         } catch (DuplicateException e) {
-            ui.error(e.getMessage());
+            ui.onError(e);
         }
     }
 
@@ -54,8 +55,9 @@ public class PriceTracker implements UIEventListener
     public void onRemovePlatformEvent(Platform platform) {
         try {
             repository.removePlatform(platform);
+            ui.onSuccess();
         } catch (NotFoundException e) {
-            ui.error(e.getMessage());
+            ui.onError(e);
         }
     }
 
@@ -63,8 +65,9 @@ public class PriceTracker implements UIEventListener
     public void onAddProductEvent(Product product) {
         try {
             repository.addProduct(product);
+            ui.onSuccess();
         } catch (DuplicateException | NotFoundException e) {
-            ui.error(e.getMessage());
+            ui.onError(e);
         }
     }
 
@@ -72,8 +75,9 @@ public class PriceTracker implements UIEventListener
     public void onRemoveProductEvent(Product product) {
         try {
             repository.removeProduct(product);
+            ui.onSuccess();
         } catch (NotFoundException e) {
-            ui.error(e.getMessage());
+            ui.onError(e);
         }
     }
 
@@ -86,7 +90,7 @@ public class PriceTracker implements UIEventListener
                 double newPrice = scraper.scrapePrice(product.getURL(), "");
                 this.handleNewPrice(newPrice, product);
             } catch (IOException | NoPriceFoundException e) {
-                ui.error(e.getMessage());
+                ui.onError(e);
             }
         }
     }
@@ -99,7 +103,6 @@ public class PriceTracker implements UIEventListener
     @Override
     public void onListPlatformsEvent() {
         ui.listPlatformsEvent(repository.getAllPlatforms());
-
     }
 
     private void handleNewPrice(double newPrice, Product product) {
