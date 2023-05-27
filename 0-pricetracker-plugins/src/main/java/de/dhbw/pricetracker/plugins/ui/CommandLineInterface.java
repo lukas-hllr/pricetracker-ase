@@ -11,7 +11,6 @@ import de.dhbw.pricetracker.domain.Product;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class CommandLineInterface implements UserInterface {
 
@@ -99,6 +98,13 @@ public class CommandLineInterface implements UserInterface {
 
     @Override
     public void helpForAddProductEvent() {
+        Console.println("Um dem PriceTracker ein Produkt hinzuzufügen, benötigst du folgenden Daten:");
+        Console.print(MessageType.REQUEST, "Name: ");
+        Console.println("Ein selbst gewählter Name.");
+        Console.print(MessageType.REQUEST, "Platform: ");
+        Console.println("Name der Platform, auf welcher sich diese Produkt befindet.");
+        Console.print(MessageType.REQUEST, "URL: ");
+        Console.println("URL des Produkts.");
     }
 
     @Override
@@ -193,23 +199,13 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public void info(String message) {
-        Console.println(MessageType.INFO, message);
+    public void onSuccess() {
+        Console.println(MessageType.SUCCESS, "Operation erfolgreich ausgeführt");
     }
 
     @Override
-    public void success(String message) {
-        Console.println(MessageType.SUCCESS, message);
-    }
-
-    @Override
-    public void error(String message) {
-        Console.println(MessageType.ERROR, message);
-    }
-
-    @Override
-    public void warning(String message) {
-        Console.println(MessageType.WARN, message);
+    public void onError(Exception e) {
+        Console.println(MessageType.ERROR, e.getMessage());
     }
 
     private String trim(String string, int length){
