@@ -32,11 +32,12 @@ public class CommonRepository implements Repository {
         this.platformStorage = platformStorage;
         this.productStorage = productStorage;
         initPlatformRepository();
+        initProductRepository();
     }
     private void initPlatformRepository()
     {
         List<Platform> platformList = platformStorage.getAll();
-        platforms = new HashMap();
+        platforms = new HashMap<>();
         for (Platform platform: platformList) {
             platforms.put(platform.getName(), platform);
         }
@@ -45,7 +46,7 @@ public class CommonRepository implements Repository {
     private void initProductRepository()
     {
         List<Product> productList = productStorage.getAll();
-        products = new HashMap();
+        products = new HashMap<>();
         for (Product product: productList) {
             products.put(product.getName(), product);
         }
