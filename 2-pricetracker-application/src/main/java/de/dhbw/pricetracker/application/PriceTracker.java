@@ -8,11 +8,13 @@ import de.dhbw.pricetracker.application.repository.Repository;
 import de.dhbw.pricetracker.application.timekeeper.TimeKeeper;
 import de.dhbw.pricetracker.application.ui.UIEventListener;
 import de.dhbw.pricetracker.application.ui.UserInterface;
+import de.dhbw.pricetracker.domain.Currency;
 import de.dhbw.pricetracker.domain.Platform;
 import de.dhbw.pricetracker.domain.Price;
 import de.dhbw.pricetracker.domain.Product;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 public class PriceTracker implements UIEventListener
@@ -110,20 +112,14 @@ public class PriceTracker implements UIEventListener
     @Override
     public void onListCurrenciesEvent()
     {
-
+        ui.listCurrenciesEvent(List.of(Currency.values()));
     }
 
     @Override
-    public void onListPricesRequestedEvent()
+    public void onListPricesEvent()
     {
         Product product = ui.onRequestProduct(repository.getAllProducts());
         ui.listPricesEvent(repository.getPricesOfProduct(product));
-    }
-
-    @Override
-    public void onListPricesEvent(Product product)
-    {
-
     }
 
     private void handleNewPrice(Price newPrice, Product product) {

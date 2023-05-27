@@ -11,7 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class CommandLineInterface implements UserInterface {
+public class CommandLineInterface implements UserInterface
+{
 
     UIEventListener listener;
 
@@ -20,10 +21,11 @@ public class CommandLineInterface implements UserInterface {
     List<Currency> currencyContext;
 
     @Override
-    public void start() {
+    public void start()
+    {
         Console.println(MessageType.SUCCESS, "Willkommen beim PriceTracker!");
         loop:
-        while(true){
+        while (true) {
             String input = Console.read().toLowerCase();
 
             switch (input) {
@@ -46,7 +48,7 @@ public class CommandLineInterface implements UserInterface {
                     listener.onListProductsEvent();
                     break;
                 case "prices list":
-                    listener.onListPricesRequestedEvent();
+                    listener.onListPricesEvent();
                     break;
                 case "platforms add --help":
                     helpForAddPlatformEvent();
@@ -64,12 +66,14 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public void setUIEventListener(UIEventListener listener) {
+    public void setUIEventListener(UIEventListener listener)
+    {
         this.listener = listener;
     }
 
     @Override
-    public void helpForAddPlatformEvent() {
+    public void helpForAddPlatformEvent()
+    {
         Console.println("Um dem PriceTracker eine Platform hinzuzufügen, benötigst du folgenden Daten:");
         Console.print(MessageType.REQUEST, "Name: ");
         Console.println("Ein selbst gewählter Name.");
@@ -78,7 +82,8 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public void addPlatformEvent() {
+    public void addPlatformEvent()
+    {
         String name = Console.read("Name: ");
         String priceIdentifier = Console.read("Preisselektor: ");
 
@@ -86,7 +91,8 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public void removePlatformEvent() {
+    public void removePlatformEvent()
+    {
         Console.println(MessageType.WARN, "Achtung: Alle dazugehörigen Produkte werden ebenfalls gelöscht!");
         listener.onListPlatformsEvent();
         String input = Console.read("Welche Platform?: ");
@@ -94,13 +100,14 @@ public class CommandLineInterface implements UserInterface {
             int index = Integer.parseInt(input);
             Platform platform = platformContext.get(index);
             listener.onRemovePlatformEvent(platform);
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             inputError(input);
         }
     }
 
     @Override
-    public void helpForAddProductEvent() {
+    public void helpForAddProductEvent()
+    {
         Console.println("Um dem PriceTracker ein Produkt hinzuzufügen, benötigst du folgenden Daten:");
         Console.print(MessageType.REQUEST, "Name: ");
         Console.println("Ein selbst gewählter Name.");
@@ -111,31 +118,42 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public void addProductEvent() {
+    public void addProductEvent()
+    {
         String name = Console.read("Name: ");
         String platform = Console.read("Platform: ");
         String url = Console.read("URL: ");
-        Currency currency = Currency.valueOf(Console.read("Currency: "));
+        listener.onListCurrenciesEvent();
+        String currencyInput = Console.read("Währung: ");
+        try {
+            int index = Integer.parseInt(currencyInput);
+            Currency currency = currencyContext.get(index);
+            Product product = new CommonProduct(name, platform, url, currency);
+            listener.onAddProductEvent(product);
+        } catch (NumberFormatException e) {
+            inputError(currencyInput);
+        }
 
-        Product product = new CommonProduct(name, platform, url, currency);
-        listener.onAddProductEvent(product);
+
     }
 
     @Override
-    public void removeProductEvent() {
+    public void removeProductEvent()
+    {
         listener.onListProductsEvent();
         String input = Console.read("Welches Produkt?: ");
         try {
             int index = Integer.parseInt(input);
             Product product = productContext.get(index);
             listener.onRemoveProductEvent(product);
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             inputError(input);
         }
     }
 
     @Override
-    public void listProductsEvent(List<Product> products) {
+    public void listProductsEvent(List<Product> products)
+    {
         productContext = products;
         for (int i = 0; i < products.size(); i++) {
             String header = "(" + i + "):";
@@ -153,7 +171,8 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public void listPlatformsEvent(List<Platform> platforms) {
+    public void listPlatformsEvent(List<Platform> platforms)
+    {
         platformContext = platforms;
         for (int i = 0; i < platforms.size(); i++) {
             String header = "(" + i + "):";
@@ -198,18 +217,21 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public void onUpdateStartedEvent() {
+    public void onUpdateStartedEvent()
+    {
         Console.println(MessageType.INFO, "\nUpdate begonnen.");
     }
 
     @Override
-    public void onUpdateStartedEvent(Product product) {
+    public void onUpdateStartedEvent(Product product)
+    {
         String name = product.getName();
         Console.print(MessageType.INFO, "Preis von \"" + name + "\" holen ... ");
     }
 
     @Override
-    public void onPriceIncreased(Price newPrice, Product product) {
+    public void onPriceIncreased(Price newPrice, Product product)
+    {
         Price oldPrice = product.getPrice();
         double priceIncrease = Math.abs(newPrice.value() - oldPrice.value());
         Console.print(MessageType.INFO, "-> Preissteigerung um ");
@@ -218,7 +240,8 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public void onPriceDecreased(Price newPrice, Product product) {
+    public void onPriceDecreased(Price newPrice, Product product)
+    {
         Price oldPrice = product.getPrice();
         double priceDecrease = Math.abs(newPrice.value() - oldPrice.value());
         Console.print(MessageType.INFO, "-> Preissenkung um ");
@@ -227,17 +250,20 @@ public class CommandLineInterface implements UserInterface {
     }
 
     @Override
-    public void onNoPriceChange(Product product) {
+    public void onNoPriceChange(Product product)
+    {
         Console.println(MessageType.INFO, "-> Keine Veränderung");
     }
 
     @Override
-    public void onSuccess() {
+    public void onSuccess()
+    {
         Console.println(MessageType.SUCCESS, "Operation erfolgreich ausgeführt");
     }
 
     @Override
-    public void onError(Exception e) {
+    public void onError(Exception e)
+    {
         Console.println(MessageType.ERROR, e.getMessage());
     }
 
@@ -245,25 +271,29 @@ public class CommandLineInterface implements UserInterface {
     public Product onRequestProduct(List<Product> allProducts)
     {
         listProductsEvent(allProducts);
-        String input = Console.read("Welches Produkt?: ");
-        try {
-            int index = Integer.parseInt(input);
-            Product product = productContext.get(index);
-            return product;
-        } catch (NumberFormatException e){
-            inputError(input);
+        Product product = null;
+        while (product == null) {
+            String input = Console.read("Welches Produkt?: ");
+            try {
+                int index = Integer.parseInt(input);
+                product = productContext.get(index);
+            } catch (NumberFormatException e) {
+                inputError(input);
+            }
         }
-        return null; //TODO
+        return product;
     }
 
-    private String trim(String string, int length){
-        if(string.length() > length){
-            string = string.substring(0, length-3) + "...";
+    private String trim(String string, int length)
+    {
+        if (string.length() > length) {
+            string = string.substring(0, length - 3) + "...";
         }
         return String.format("%-" + length + "s", string);
     }
 
-    private void inputError(String input) {
+    private void inputError(String input)
+    {
         Console.println(MessageType.ERROR, "Unzulässige Eingabe \"" + input + "\"");
     }
 }
