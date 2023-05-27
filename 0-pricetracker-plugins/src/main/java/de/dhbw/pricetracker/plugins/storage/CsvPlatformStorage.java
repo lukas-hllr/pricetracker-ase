@@ -1,101 +1,41 @@
 package de.dhbw.pricetracker.plugins.storage;
 
-import de.dhbw.pricetracker.adapters.storage.Storage;
 import de.dhbw.pricetracker.domain.CommonPlatform;
 import de.dhbw.pricetracker.domain.Platform;
-import de.dhbw.pricetracker.domain.Product;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.StringJoiner;
 
-public class CsvPlatformStorage implements Storage<Platform> {
-    private String csvDelimiter;
-    private File platformCsv;
-    private List<Platform> platforms;
+public class CsvPlatformStorage extends CsvStorage<Platform>
+{
 
-    public CsvPlatformStorage(){
-        String directory = System.getProperty("user.home");
-        String filename = "pricetracker_platform.csv";
-
-        this.platforms = new ArrayList<>();
-        this.platformCsv = new File(directory, filename);
-        this.csvDelimiter = ";";
-        createFileIfMissing(platformCsv);
-        readPlatformsFromCsv();
-    }
-    public CsvPlatformStorage(File csvFile, String csvDelimiter){
-        this.platforms = new ArrayList<>();
-        this.platformCsv = csvFile;
-        this.csvDelimiter = csvDelimiter;
-        createFileIfMissing(platformCsv);
-        readPlatformsFromCsv();
+    public CsvPlatformStorage()
+    {
+        super();
     }
 
-    private void readPlatformsFromCsv() {
-        try (BufferedReader platformReader = new BufferedReader(new FileReader(platformCsv))){
-            String line;
-            while ((line = platformReader.readLine()) != null) {
-                String[] values = line.split(csvDelimiter);
-
-                String name = values[0];
-                String priceIdentifier = values[1];
-
-                Platform newPlatform = new CommonPlatform(name, priceIdentifier);
-
-                platforms.add(newPlatform);
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public CsvPlatformStorage(File csvFile, String csvDelimiter)
+    {
+        super(csvFile, csvDelimiter);
     }
 
-    private void createFileIfMissing(File file) {
-        if(!file.exists()){
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private void appendToFile(File file, String string) {
-        try(PrintWriter pw = new PrintWriter(new FileOutputStream(file, true))) {
-            pw.println(string);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private String platformToCsvString(Platform platform){
+    @Override
+    String entityToCsvString(Platform entity)
+    {
         StringJoiner joiner = new StringJoiner(csvDelimiter);
-        joiner.add(platform.getName());
-        joiner.add(platform.getPriceSelector());
+        joiner.add(entity.getName());
+        joiner.add(entity.getPriceSelector());
         return joiner.toString();
     }
 
     @Override
-    public List<Platform> getAll() {
-        return platforms;
-    }
+    Platform csvStringToEntity(String csvLine)
+    {
+        String[] values = csvLine.split(csvDelimiter);
 
-    @Override
-    public void add(Platform entity){
-        platforms.add(entity);
-        String csvLine = platformToCsvString(entity);
-        appendToFile(platformCsv, csvLine);
-    }
+        String name = values[0];
+        String priceIdentifier = values[1];
 
-    @Override
-    public void remove(Platform entity) {
-        platformCsv.delete();
-        createFileIfMissing(platformCsv);
-        platforms.remove(entity);
-        for (Platform platform: platforms) {
-            String csvLine = platformToCsvString(platform);
-            appendToFile(platformCsv, csvLine);
-        }
+        return new CommonPlatform(name, priceIdentifier);
     }
 }
