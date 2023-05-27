@@ -17,7 +17,7 @@ public class CsvProductStorage implements Storage<Product> {
         String directory = System.getProperty("user.home");
         String filename = "pricetracker_product.csv";
 
-        this.products = new ArrayList();
+        this.products = new ArrayList<>();
         this.productCsv = new File(directory, filename);
         this.csvDelimiter = ";";
         createFileIfMissing(productCsv);

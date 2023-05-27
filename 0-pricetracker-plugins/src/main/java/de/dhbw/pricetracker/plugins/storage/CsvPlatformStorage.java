@@ -17,7 +17,7 @@ public class CsvPlatformStorage implements Storage<Platform> {
         String directory = System.getProperty("user.home");
         String filename = "pricetracker_platform.csv";
 
-        this.platforms = new ArrayList();
+        this.platforms = new ArrayList<>();
         this.platformCsv = new File(directory, filename);
         this.csvDelimiter = ";";
         createFileIfMissing(platformCsv);
