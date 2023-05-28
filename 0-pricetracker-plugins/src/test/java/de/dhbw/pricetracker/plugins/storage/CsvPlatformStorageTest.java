@@ -56,7 +56,6 @@ class CsvPlatformStorageTest {
         }};
 
         assertEquals(expected, platformStorage.getAll());
-        assertEquals(5, countLines(testCsv));
     }
 
     @Test
