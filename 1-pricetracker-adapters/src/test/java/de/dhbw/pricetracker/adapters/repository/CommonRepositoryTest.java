@@ -98,7 +98,7 @@ class CommonRepositoryTest {
     }
 
     @Test
-    void removePlatform() throws NotFoundException {
+    void testRemovePlatform() throws NotFoundException {
         repository.removePlatform(testPlatforms[1]);
         List<Platform> resultPlatforms = repository.getAllPlatforms();
         List<Product> resultProducts = repository.getAllProducts();
