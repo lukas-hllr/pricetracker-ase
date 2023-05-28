@@ -6,6 +6,7 @@ import de.dhbw.pricetracker.adapters.repository.CommonRepository;
 import de.dhbw.pricetracker.adapters.storage.Storage;
 import de.dhbw.pricetracker.adapters.timekeeper.ThreadedTimeKeeper;
 import de.dhbw.pricetracker.application.PriceTracker;
+import de.dhbw.pricetracker.application.builder.PriceTrackerBuilder;
 import de.dhbw.pricetracker.application.repository.Repository;
 import de.dhbw.pricetracker.application.timekeeper.TimeKeeper;
 import de.dhbw.pricetracker.application.ui.UserInterface;
@@ -38,12 +39,13 @@ public class Main
         TimeKeeper timeKeeper =
                 new ThreadedTimeKeeper();
 
-        PriceTracker pt = new PriceTracker(
-                ui,
-                repository,
-                scraper,
-                timeKeeper
-        );
+        PriceTrackerBuilder ptBuilder = new PriceTrackerBuilder();
+        ptBuilder.withHtmlScraper(scraper);
+        ptBuilder.withRepository(repository);
+        ptBuilder.withTimeKeeper(timeKeeper);
+        ptBuilder.withUserInterface(ui);
+
+        PriceTracker pt = ptBuilder.build();
 
         pt.start();
     }
