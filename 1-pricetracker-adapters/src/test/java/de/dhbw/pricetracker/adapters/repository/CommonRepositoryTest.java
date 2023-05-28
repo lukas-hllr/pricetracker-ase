@@ -9,6 +9,7 @@ import de.dhbw.pricetracker.plugins.storage.CsvPlatformStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -31,6 +32,14 @@ class CommonRepositoryTest {
             new Product("TestProduct3", "TestPlatform1", "url3", Currency.YUAN),
             new Product("TestProduct4", "TestPlatform2", "url4", Currency.EURO),
     };
+
+    static Price[] testPrices = new Price[]{
+            new Price(testProducts[0].name(),1.99, new Date(1685263671873L), Currency.EURO),
+            new Price(testProducts[0].name(),3.49, new Date(1685963671873L), Currency.EURO),
+            new Price(testProducts[0].name(),0.99, new Date(1686963671873L), Currency.EURO),
+            new Price(testProducts[1].name(),299.90, new Date(1683163671873L), Currency.US_DOLLAR),
+            new Price(testProducts[3].name(),3, new Date(1683163671873L), Currency.YUAN),
+    };
     @BeforeEach
     void setUp() {
         Storage<Platform> platformStorage = new StorageMock<>();
@@ -42,7 +51,12 @@ class CommonRepositoryTest {
         productStorage.add(testProducts[1]);
         productStorage.add(testProducts[2]);
 
-        repository = new CommonRepository(platformStorage, productStorage);
+        Storage<Price> priceStorage = new StorageMock<>();
+        priceStorage.add(testPrices[0]);
+        priceStorage.add(testPrices[1]);
+        priceStorage.add(testPrices[2]);
+
+        repository = new CommonRepository(platformStorage, productStorage, priceStorage);
     }
 
     @Test

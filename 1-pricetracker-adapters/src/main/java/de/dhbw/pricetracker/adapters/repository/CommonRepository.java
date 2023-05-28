@@ -11,10 +11,7 @@ import de.dhbw.pricetracker.plugins.storage.CsvPlatformStorage;
 import de.dhbw.pricetracker.plugins.storage.CsvPriceStorage;
 import de.dhbw.pricetracker.plugins.storage.CsvProductStorage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CommonRepository implements Repository
 {
@@ -32,15 +29,17 @@ public class CommonRepository implements Repository
         this.productStorage = new CsvProductStorage();
         this.priceStorage = new CsvPriceStorage();
         initPlatformRepository();
-        initProductRepository();
         initPriceRepository();
+        initProductRepository();
     }
 
-    public CommonRepository(Storage<Platform> platformStorage, Storage<Product> productStorage)
+    public CommonRepository(Storage<Platform> platformStorage, Storage<Product> productStorage, Storage<Price> priceStorage)
     {
         this.platformStorage = platformStorage;
         this.productStorage = productStorage;
+        this.priceStorage = priceStorage;
         initPlatformRepository();
+        initPriceRepository();
         initProductRepository();
     }
 
@@ -58,6 +57,13 @@ public class CommonRepository implements Repository
         List<Product> productList = productStorage.getAll();
         products = new HashMap<>();
         for (Product product : productList) {
+            List<Price> priceList = prices;
+            prices.add(new Price(product.name(), product.currency()));
+            Price latestPrice = priceList.stream()
+                    .filter(price -> price.product().equals(product.name()))
+                    .sorted((p1, p2) -> p1.timestamp().before(p2.timestamp())?1:-1)
+                    .findFirst().get();
+            product.setPrice(latestPrice);
             products.put(product.name(), product);
         }
     }
@@ -125,7 +131,7 @@ public class CommonRepository implements Repository
         if (!products.containsKey(price.product())) {
             throw new NotFoundException(Product.class, price.product());
         }
-
+        this.products.get(price.product()).setPrice(price);
         this.prices.add(price);
         this.priceStorage.add(price);
 

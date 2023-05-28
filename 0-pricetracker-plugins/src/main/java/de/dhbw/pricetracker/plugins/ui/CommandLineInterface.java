@@ -233,9 +233,9 @@ public class CommandLineInterface implements UserInterface
     public void onPriceIncreased(Price newPrice, Product product)
     {
         Price oldPrice = product.price();
-        double priceIncrease = Math.abs(newPrice.value() - oldPrice.value());
+        Price priceIncrease = new Price(product.name(), Math.abs(newPrice.value() - oldPrice.value()), product.currency());
         Console.print(MessageType.INFO, "-> Preissteigerung um ");
-        Console.print(MessageType.ERROR, String.format(Locale.US, "%.2f %s", priceIncrease, product.currency().getSymbol()));
+        Console.print(MessageType.ERROR, priceIncrease.toString());
         Console.println(MessageType.INFO, ". neuer Preis: " + newPrice);
     }
 
@@ -243,9 +243,9 @@ public class CommandLineInterface implements UserInterface
     public void onPriceDecreased(Price newPrice, Product product)
     {
         Price oldPrice = product.price();
-        double priceDecrease = Math.abs(newPrice.value() - oldPrice.value());
+        Price priceDecrease = new Price(product.name(), Math.abs(newPrice.value() - oldPrice.value()), product.currency());
         Console.print(MessageType.INFO, "-> Preissenkung um ");
-        Console.print(MessageType.SUCCESS, String.format("%f.2", priceDecrease));
+        Console.print(MessageType.SUCCESS, priceDecrease.toString());
         Console.println(MessageType.INFO, ". neuer Preis: " + newPrice);
     }
 
