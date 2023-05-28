@@ -1,13 +1,15 @@
 package de.dhbw.pricetracker.plugins.network;
 
-import de.dhbw.pricetracker.application.network.WebClient;
+
+import de.dhbw.pricetracker.adapters.network.WebClient;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class CommonWebClient implements WebClient {
+public class CommonWebClient implements WebClient
+{
     @Override
     public InputStream getHtml(String url) throws IOException {
         URL urlObj = new URL(url);

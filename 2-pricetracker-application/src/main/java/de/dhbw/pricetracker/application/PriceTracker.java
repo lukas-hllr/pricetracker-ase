@@ -15,7 +15,6 @@ import de.dhbw.pricetracker.domain.Product;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 public class PriceTracker implements UIEventListener
 {
