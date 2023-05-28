@@ -10,18 +10,22 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.StringJoiner;
 
-public class CsvPriceStorage extends CsvStorage<Price> {
+public class CsvPriceStorage extends CsvStorage<Price>
+{
 
-    public CsvPriceStorage(){
-        super(new File(System.getProperty("user.home"),"pricetracker_prices.csv"), ";");
+    public CsvPriceStorage()
+    {
+        super(new File(System.getProperty("user.home"), "pricetracker_prices.csv"), ";");
     }
 
-    public CsvPriceStorage(File csvFile, String csvDelimiter){
+    public CsvPriceStorage(File csvFile, String csvDelimiter)
+    {
         super(csvFile, csvDelimiter);
     }
 
     @Override
-    String entityToCsvString(Price entity) {
+    String entityToCsvString(Price entity)
+    {
         StringJoiner joiner = new StringJoiner(csvDelimiter);
         joiner.add(entity.product());
         joiner.add(String.format(Locale.US, "%.2f", entity.value()));
@@ -31,7 +35,8 @@ public class CsvPriceStorage extends CsvStorage<Price> {
     }
 
     @Override
-    Price csvStringToEntity(String csvLine) {
+    Price csvStringToEntity(String csvLine)
+    {
         String[] values = csvLine.split(this.csvDelimiter);
 
         String product = values[0];

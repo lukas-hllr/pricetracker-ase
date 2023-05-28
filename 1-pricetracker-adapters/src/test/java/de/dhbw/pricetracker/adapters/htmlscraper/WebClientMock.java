@@ -1,6 +1,6 @@
 package de.dhbw.pricetracker.adapters.htmlscraper;
 
-import de.dhbw.pricetracker.application.network.WebClient;
+import de.dhbw.pricetracker.adapters.network.WebClient;
 
 import java.io.File;
 import java.io.FileInputStream;

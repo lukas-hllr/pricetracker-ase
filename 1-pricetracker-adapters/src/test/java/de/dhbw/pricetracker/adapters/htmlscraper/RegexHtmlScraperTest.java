@@ -2,12 +2,11 @@ package de.dhbw.pricetracker.adapters.htmlscraper;
 
 import de.dhbw.pricetracker.application.htmlscraper.HtmlScraper;
 import de.dhbw.pricetracker.application.htmlscraper.NoPriceFoundException;
-import de.dhbw.pricetracker.application.network.WebClient;
+import de.dhbw.pricetracker.adapters.network.WebClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.lang.reflect.Executable;
 
 import static org.junit.jupiter.api.Assertions.*;
 

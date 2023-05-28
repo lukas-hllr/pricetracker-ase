@@ -10,8 +10,10 @@ import de.dhbw.pricetracker.application.ui.UserInterface;
 import de.dhbw.pricetracker.application.htmlscraper.HtmlScraper;
 import de.dhbw.pricetracker.plugins.ui.CommandLineInterface;
 
-public class Main {
-    public static void main(String[] args) {
+public class Main
+{
+    public static void main(String[] args)
+    {
         UserInterface ui =
                 new CommandLineInterface();
         Repository repository =

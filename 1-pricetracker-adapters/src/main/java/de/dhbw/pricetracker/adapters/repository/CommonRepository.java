@@ -16,7 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CommonRepository implements Repository {
+public class CommonRepository implements Repository
+{
 
     private Storage<Platform> platformStorage;
     private Storage<Product> productStorage;
@@ -34,17 +35,20 @@ public class CommonRepository implements Repository {
         initProductRepository();
         initPriceRepository();
     }
-    public CommonRepository(Storage<Platform> platformStorage, Storage<Product> productStorage){
+
+    public CommonRepository(Storage<Platform> platformStorage, Storage<Product> productStorage)
+    {
         this.platformStorage = platformStorage;
         this.productStorage = productStorage;
         initPlatformRepository();
         initProductRepository();
     }
+
     private void initPlatformRepository()
     {
         List<Platform> platformList = platformStorage.getAll();
         platforms = new HashMap<>();
-        for (Platform platform: platformList) {
+        for (Platform platform : platformList) {
             platforms.put(platform.getName(), platform);
         }
     }
@@ -53,7 +57,7 @@ public class CommonRepository implements Repository {
     {
         List<Product> productList = productStorage.getAll();
         products = new HashMap<>();
-        for (Product product: productList) {
+        for (Product product : productList) {
             products.put(product.getName(), product);
         }
     }
@@ -64,8 +68,9 @@ public class CommonRepository implements Repository {
     }
 
     @Override
-    public void addPlatform(Platform platform) throws DuplicateException {
-        if(platforms.containsKey(platform.getName())){
+    public void addPlatform(Platform platform) throws DuplicateException
+    {
+        if (platforms.containsKey(platform.getName())) {
             throw new DuplicateException(platform);
         }
 
@@ -74,16 +79,17 @@ public class CommonRepository implements Repository {
     }
 
     @Override
-    public void removePlatform(Platform platform) throws NotFoundException {
-        if(platforms.containsKey(platform.getName())){
+    public void removePlatform(Platform platform) throws NotFoundException
+    {
+        if (platforms.containsKey(platform.getName())) {
             List<Product> toBeRemoved = new ArrayList<>();
             for (Map.Entry<String, Product> productEntry : products.entrySet()) {
                 Product product = productEntry.getValue();
-                if(product.getPlatform().equals(platform.getName())){
+                if (product.getPlatform().equals(platform.getName())) {
                     toBeRemoved.add(product);
                 }
             }
-            for(Product product: toBeRemoved){
+            for (Product product : toBeRemoved) {
                 removeProduct(product);
             }
             this.platformStorage.remove(platform);
@@ -94,16 +100,18 @@ public class CommonRepository implements Repository {
     }
 
     @Override
-    public List<Platform> getAllPlatforms() {
+    public List<Platform> getAllPlatforms()
+    {
         return new ArrayList<>(platforms.values());
     }
 
     @Override
-    public void addProduct(Product entity) throws DuplicateException, NotFoundException {
-        if(products.containsKey(entity.getName())){
+    public void addProduct(Product entity) throws DuplicateException, NotFoundException
+    {
+        if (products.containsKey(entity.getName())) {
             throw new DuplicateException(entity);
         }
-        if(!platforms.containsKey(entity.getPlatform())){
+        if (!platforms.containsKey(entity.getPlatform())) {
             throw new NotFoundException(Platform.class, entity.getPlatform());
         }
 
@@ -114,7 +122,7 @@ public class CommonRepository implements Repository {
     @Override
     public void addPrice(Price price) throws NotFoundException
     {
-        if(!products.containsKey(price.product())){
+        if (!products.containsKey(price.product())) {
             throw new NotFoundException(Product.class, price.product());
         }
 
@@ -124,8 +132,9 @@ public class CommonRepository implements Repository {
     }
 
     @Override
-    public void removeProduct(Product product) throws NotFoundException {
-        if(products.containsKey(product.getName())){
+    public void removeProduct(Product product) throws NotFoundException
+    {
+        if (products.containsKey(product.getName())) {
             this.productStorage.remove(product);
             products.remove(product.getName());
         } else {
@@ -140,7 +149,8 @@ public class CommonRepository implements Repository {
     }
 
     @Override
-    public List<Product> getAllProducts() {
+    public List<Product> getAllProducts()
+    {
         return new ArrayList<>(products.values());
     }
 
@@ -149,7 +159,7 @@ public class CommonRepository implements Repository {
     {
         List<Price> pricesOfProduct = new ArrayList<>();
         for (Price price : prices) {
-            if(price.product().equals(product.getName())){
+            if (price.product().equals(product.getName())) {
                 pricesOfProduct.add(price);
             }
         }

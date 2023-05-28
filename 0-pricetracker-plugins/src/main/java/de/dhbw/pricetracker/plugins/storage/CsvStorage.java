@@ -6,12 +6,14 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CsvStorage<T> implements Storage<T> {
+public abstract class CsvStorage<T> implements Storage<T>
+{
     final String csvDelimiter;
     private final File csvFile;
     private final List<T> entities;
 
-    public CsvStorage(){
+    public CsvStorage()
+    {
         String directory = System.getProperty("user.home");
         String filename = "pricetracker_entity.csv";
 
@@ -21,7 +23,9 @@ public abstract class CsvStorage<T> implements Storage<T> {
         createFileIfMissing(csvFile);
         readEntitiesFromCsv();
     }
-    public CsvStorage(File csvFile, String csvDelimiter){
+
+    public CsvStorage(File csvFile, String csvDelimiter)
+    {
         this.entities = new ArrayList<>();
         this.csvFile = csvFile;
         this.csvDelimiter = csvDelimiter;
@@ -29,8 +33,9 @@ public abstract class CsvStorage<T> implements Storage<T> {
         readEntitiesFromCsv();
     }
 
-    private void readEntitiesFromCsv() {
-        try (BufferedReader entityReader = new BufferedReader(new FileReader(csvFile))){
+    private void readEntitiesFromCsv()
+    {
+        try (BufferedReader entityReader = new BufferedReader(new FileReader(csvFile))) {
             String line;
             while ((line = entityReader.readLine()) != null) {
                 T newEntity = csvStringToEntity(line);
@@ -44,8 +49,9 @@ public abstract class CsvStorage<T> implements Storage<T> {
         }
     }
 
-    private void createFileIfMissing(File file) {
-        if(!file.exists()){
+    private void createFileIfMissing(File file)
+    {
+        if (!file.exists()) {
             try {
                 file.createNewFile();
             } catch (IOException e) {
@@ -54,8 +60,9 @@ public abstract class CsvStorage<T> implements Storage<T> {
         }
     }
 
-    private void appendToFile(File file, String string) {
-        try(PrintWriter pw = new PrintWriter(new FileOutputStream(file, true))) {
+    private void appendToFile(File file, String string)
+    {
+        try (PrintWriter pw = new PrintWriter(new FileOutputStream(file, true))) {
             pw.println(string);
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -63,26 +70,30 @@ public abstract class CsvStorage<T> implements Storage<T> {
     }
 
     abstract String entityToCsvString(T entity);
+
     abstract T csvStringToEntity(String csvLine);
 
     @Override
-    public List<T> getAll() {
+    public List<T> getAll()
+    {
         return entities;
     }
 
     @Override
-    public void add(T entity){
+    public void add(T entity)
+    {
         entities.add(entity);
         String csvLine = entityToCsvString(entity);
         appendToFile(csvFile, csvLine);
     }
 
     @Override
-    public void remove(T entity) {
+    public void remove(T entity)
+    {
         csvFile.delete();
         createFileIfMissing(csvFile);
         entities.remove(entity);
-        for (T currentEntity: entities) {
+        for (T currentEntity : entities) {
             String csvLine = entityToCsvString(currentEntity);
             appendToFile(csvFile, csvLine);
         }

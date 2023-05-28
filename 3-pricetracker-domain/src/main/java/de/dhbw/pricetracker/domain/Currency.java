@@ -9,7 +9,9 @@ public enum Currency
     YUAN("¥");
 
     final String symbol;
-    private Currency(String symbol){
+
+    private Currency(String symbol)
+    {
         this.symbol = symbol;
     }
 

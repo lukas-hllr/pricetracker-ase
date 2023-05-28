@@ -29,7 +29,8 @@ public class PriceTracker implements UIEventListener
             Repository repository,
             HtmlScraper scraper,
             TimeKeeper timeKeeper
-    ) {
+    )
+    {
         this.ui = ui;
         this.repository = repository;
         this.scraper = scraper;
@@ -45,7 +46,8 @@ public class PriceTracker implements UIEventListener
     }
 
     @Override
-    public void onAddPlatformEvent(Platform platform) {
+    public void onAddPlatformEvent(Platform platform)
+    {
         try {
             repository.addPlatform(platform);
             ui.onSuccess();
@@ -55,7 +57,8 @@ public class PriceTracker implements UIEventListener
     }
 
     @Override
-    public void onRemovePlatformEvent(Platform platform) {
+    public void onRemovePlatformEvent(Platform platform)
+    {
         try {
             repository.removePlatform(platform);
             ui.onSuccess();
@@ -65,7 +68,8 @@ public class PriceTracker implements UIEventListener
     }
 
     @Override
-    public void onAddProductEvent(Product product) {
+    public void onAddProductEvent(Product product)
+    {
         try {
             repository.addProduct(product);
             ui.onSuccess();
@@ -75,7 +79,8 @@ public class PriceTracker implements UIEventListener
     }
 
     @Override
-    public void onRemoveProductEvent(Product product) {
+    public void onRemoveProductEvent(Product product)
+    {
         try {
             repository.removeProduct(product);
             ui.onSuccess();
@@ -85,7 +90,8 @@ public class PriceTracker implements UIEventListener
     }
 
     @Override
-    public void onUpdatePriceEvent() {
+    public void onUpdatePriceEvent()
+    {
         ui.onUpdateStartedEvent();
         for (Product product : repository.getAllProducts()) {
             ui.onUpdateStartedEvent(product);
@@ -101,12 +107,14 @@ public class PriceTracker implements UIEventListener
     }
 
     @Override
-    public void onListProductsEvent() {
+    public void onListProductsEvent()
+    {
         ui.listProductsEvent(repository.getAllProducts());
     }
 
     @Override
-    public void onListPlatformsEvent() {
+    public void onListPlatformsEvent()
+    {
         ui.listPlatformsEvent(repository.getAllPlatforms());
     }
 
@@ -123,7 +131,8 @@ public class PriceTracker implements UIEventListener
         ui.listPricesEvent(repository.getPricesOfProduct(product));
     }
 
-    private void handleNewPrice(Price newPrice, Product product) {
+    private void handleNewPrice(Price newPrice, Product product)
+    {
         Price oldPrice = product.getPrice();
         try {
             if (newPrice.value() > oldPrice.value()) {
@@ -137,7 +146,7 @@ public class PriceTracker implements UIEventListener
             } else {
                 ui.onNoPriceChange(product);
             }
-        } catch (NotFoundException e){
+        } catch (NotFoundException e) {
             ui.onError(e);
         }
     }

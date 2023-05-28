@@ -7,19 +7,23 @@ import de.dhbw.pricetracker.domain.Product;
 import java.io.File;
 import java.util.StringJoiner;
 
-public class CsvProductStorage extends CsvStorage<Product> {
+public class CsvProductStorage extends CsvStorage<Product>
+{
 
-    public CsvProductStorage(){
-        super(new File(System.getProperty("user.home"),"pricetracker_products.csv"), ";");
+    public CsvProductStorage()
+    {
+        super(new File(System.getProperty("user.home"), "pricetracker_products.csv"), ";");
 
     }
 
-    public CsvProductStorage(File csvFile, String csvDelimiter){
+    public CsvProductStorage(File csvFile, String csvDelimiter)
+    {
         super(csvFile, csvDelimiter);
     }
 
     @Override
-    String entityToCsvString(Product entity) {
+    String entityToCsvString(Product entity)
+    {
         StringJoiner joiner = new StringJoiner(csvDelimiter);
         joiner.add(entity.getName());
         joiner.add(entity.getPlatform());
@@ -29,7 +33,8 @@ public class CsvProductStorage extends CsvStorage<Product> {
     }
 
     @Override
-    Product csvStringToEntity(String csvLine) {
+    Product csvStringToEntity(String csvLine)
+    {
         String[] values = csvLine.split(this.csvDelimiter);
 
         String name = values[0];

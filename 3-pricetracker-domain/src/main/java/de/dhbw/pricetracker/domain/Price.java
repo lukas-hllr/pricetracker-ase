@@ -16,6 +16,7 @@ public record Price(String product, double value, Date timestamp, Currency curre
         this.timestamp = timestamp;
         this.currency = currency;
     }
+
     public Price(String product, double value, Currency currency)
     {
         this(product, value, new Date(System.currentTimeMillis()), currency);
@@ -29,6 +30,6 @@ public record Price(String product, double value, Date timestamp, Currency curre
     @Override
     public String toString()
     {
-        return String.format(Locale.US,"%.2f %s", value, currency.symbol);
+        return String.format(Locale.US, "%.2f %s", value, currency.symbol);
     }
 }

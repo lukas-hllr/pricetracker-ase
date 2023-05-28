@@ -11,7 +11,7 @@ public class CsvPlatformStorage extends CsvStorage<Platform>
 
     public CsvPlatformStorage()
     {
-        super(new File(System.getProperty("user.home"),"pricetracker_platforms.csv"), ";");
+        super(new File(System.getProperty("user.home"), "pricetracker_platforms.csv"), ";");
     }
 
     public CsvPlatformStorage(File csvFile, String csvDelimiter)

@@ -1,6 +1,5 @@
 package de.dhbw.pricetracker.adapters.timekeeper;
 
-import de.dhbw.pricetracker.adapters.Console;
 import de.dhbw.pricetracker.application.timekeeper.TimeKeeper;
 import de.dhbw.pricetracker.application.ui.UIEventListener;
 
@@ -16,32 +15,40 @@ public class ThreadedTimeKeeper implements TimeKeeper
     private ScheduledFuture task;
     private int interval = 1;
     private UIEventListener listener;
-    public ThreadedTimeKeeper(){
+
+    public ThreadedTimeKeeper()
+    {
         executor = Executors.newSingleThreadScheduledExecutor();
-        runnable = new Runnable() {
-            public void run() {
+        runnable = new Runnable()
+        {
+            public void run()
+            {
                 listener.onUpdatePriceEvent();
             }
         };
     }
 
     @Override
-    public void setUIEventListener(UIEventListener listener) {
+    public void setUIEventListener(UIEventListener listener)
+    {
         this.listener = listener;
     }
 
     @Override
-    public void start() {
+    public void start()
+    {
         task = executor.scheduleAtFixedRate(runnable, 0, interval, TimeUnit.MINUTES);
     }
 
     @Override
-    public void stop() {
+    public void stop()
+    {
         task.cancel(false);
     }
 
     @Override
-    public void setIntervall(int minutes) {
+    public void setIntervall(int minutes)
+    {
         stop();
         this.interval = minutes;
         start();
