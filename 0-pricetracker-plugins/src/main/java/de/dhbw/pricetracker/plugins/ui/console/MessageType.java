@@ -1,4 +1,4 @@
-package de.dhbw.pricetracker.application;
+package de.dhbw.pricetracker.plugins.ui.console;
 
 public enum MessageType {
     INFO(37),

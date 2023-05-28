@@ -134,6 +134,12 @@ public class CommonRepository implements Repository {
     }
 
     @Override
+    public Platform getPlatform(Product product)
+    {
+        return platforms.get(product.getPlatform());
+    }
+
+    @Override
     public List<Product> getAllProducts() {
         return new ArrayList<>(products.values());
     }

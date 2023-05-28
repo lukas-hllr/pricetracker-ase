@@ -13,6 +13,7 @@ public interface Repository {
     public void addPrice(Price price) throws NotFoundException;
     public void removePlatform(Platform platform) throws NotFoundException;
     public void removeProduct(Product product) throws NotFoundException;
+    public Platform getPlatform(Product product);
 
     public List<Platform> getAllPlatforms();
     public List<Product> getAllProducts();

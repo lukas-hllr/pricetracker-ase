@@ -1,10 +1,10 @@
 package de.dhbw.pricetracker.plugins.ui;
 
-import de.dhbw.pricetracker.adapters.Console;
-import de.dhbw.pricetracker.application.MessageType;
+import de.dhbw.pricetracker.plugins.ui.console.MessageType;
 import de.dhbw.pricetracker.application.ui.UIEventListener;
 import de.dhbw.pricetracker.application.ui.UserInterface;
 import de.dhbw.pricetracker.domain.*;
+import de.dhbw.pricetracker.plugins.ui.console.Console;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

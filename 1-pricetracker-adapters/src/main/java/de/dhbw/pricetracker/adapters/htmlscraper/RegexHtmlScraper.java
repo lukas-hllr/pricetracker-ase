@@ -14,6 +14,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 import java.util.Scanner;
+import java.util.StringJoiner;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 
@@ -35,26 +36,25 @@ public class RegexHtmlScraper implements HtmlScraper
     public double scrapePrice(String url, String selector) throws IOException, NoPriceFoundException
     {
         InputStream html = client.getHtml(url);
-        String price = scrape(html);
-        double parsedPrice = parse(price);
-        return parsedPrice;
-    }
 
-    private double parse(String price) {
-        if(price.charAt(price.length()-3) == ',' || price.charAt(price.length()-4) == '.'){
-            price = price.replace(".", "");
-            price = price.replace(",", ".");
+        String[] values = selector.split("\\.");
+        String element = values[0];
+        StringJoiner j = new StringJoiner(" ");
+        for (int i = 1; i < values.length; i++) {
+            j.add(values[i]);
         }
-        double parsedPrice = Double.parseDouble(price);
-        return parsedPrice;
+        String clazz = j.toString();
+
+        String price = scrape(html, element, clazz);
+        return parse(price);
     }
 
-    private static String scrape(InputStream html) throws NoPriceFoundException
+    private static String scrape(InputStream html, String element, String clazz) throws NoPriceFoundException
     {
         Scanner htmlScanner = new Scanner(html);
-        Pattern p = Pattern.compile(
-                "<span\sclass=\".*?priceToPay.*?\".*?>([0-9]{1,3}(?:[.,][0-9]{3})*(?:[.,][0-9]{2})).*?</span>"
-        );
+        String patternString = String.format(
+                "<%s\sclass=\".*?%s.*?\".*?>([0-9]{1,3}(?:[.,][0-9]{3})*(?:[.,][0-9]{2})).*?</%s>", element, clazz, element);
+        Pattern p = Pattern.compile(patternString);
 
         if (htmlScanner.findWithinHorizon(p, 0) == null)
         {
@@ -62,7 +62,14 @@ public class RegexHtmlScraper implements HtmlScraper
         }
 
         MatchResult match = htmlScanner.match();
-        String price = match.group(1);
-        return price;
+        return match.group(1);
+    }
+
+    private double parse(String price) {
+        if(price.charAt(price.length()-3) == ',' || price.charAt(price.length()-4) == '.'){
+            price = price.replace(".", "");
+            price = price.replace(",", ".");
+        }
+        return Double.parseDouble(price);
     }
 }

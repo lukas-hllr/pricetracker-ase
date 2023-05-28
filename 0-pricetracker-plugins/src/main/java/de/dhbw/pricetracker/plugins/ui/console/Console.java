@@ -1,6 +1,4 @@
-package de.dhbw.pricetracker.adapters;
-
-import de.dhbw.pricetracker.application.MessageType;
+package de.dhbw.pricetracker.plugins.ui.console;
 
 import java.util.Scanner;
 
