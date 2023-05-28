@@ -49,7 +49,7 @@ public class CommonRepository implements Repository
         List<Platform> platformList = platformStorage.getAll();
         platforms = new HashMap<>();
         for (Platform platform : platformList) {
-            platforms.put(platform.getName(), platform);
+            platforms.put(platform.name(), platform);
         }
     }
 
@@ -58,7 +58,7 @@ public class CommonRepository implements Repository
         List<Product> productList = productStorage.getAll();
         products = new HashMap<>();
         for (Product product : productList) {
-            products.put(product.getName(), product);
+            products.put(product.name(), product);
         }
     }
 
@@ -70,22 +70,22 @@ public class CommonRepository implements Repository
     @Override
     public void addPlatform(Platform platform) throws DuplicateException
     {
-        if (platforms.containsKey(platform.getName())) {
+        if (platforms.containsKey(platform.name())) {
             throw new DuplicateException(platform);
         }
 
-        this.platforms.put(platform.getName(), platform);
+        this.platforms.put(platform.name(), platform);
         this.platformStorage.add(platform);
     }
 
     @Override
     public void removePlatform(Platform platform) throws NotFoundException
     {
-        if (platforms.containsKey(platform.getName())) {
+        if (platforms.containsKey(platform.name())) {
             List<Product> toBeRemoved = new ArrayList<>();
             for (Map.Entry<String, Product> productEntry : products.entrySet()) {
                 Product product = productEntry.getValue();
-                if (product.getPlatform().equals(platform.getName())) {
+                if (product.platform().equals(platform.name())) {
                     toBeRemoved.add(product);
                 }
             }
@@ -93,7 +93,7 @@ public class CommonRepository implements Repository
                 removeProduct(product);
             }
             this.platformStorage.remove(platform);
-            platforms.remove(platform.getName());
+            platforms.remove(platform.name());
         } else {
             throw new NotFoundException(platform);
         }
@@ -108,14 +108,14 @@ public class CommonRepository implements Repository
     @Override
     public void addProduct(Product entity) throws DuplicateException, NotFoundException
     {
-        if (products.containsKey(entity.getName())) {
+        if (products.containsKey(entity.name())) {
             throw new DuplicateException(entity);
         }
-        if (!platforms.containsKey(entity.getPlatform())) {
-            throw new NotFoundException(Platform.class, entity.getPlatform());
+        if (!platforms.containsKey(entity.platform())) {
+            throw new NotFoundException(Platform.class, entity.platform());
         }
 
-        this.products.put(entity.getName(), entity);
+        this.products.put(entity.name(), entity);
         this.productStorage.add(entity);
     }
 
@@ -134,9 +134,9 @@ public class CommonRepository implements Repository
     @Override
     public void removeProduct(Product product) throws NotFoundException
     {
-        if (products.containsKey(product.getName())) {
+        if (products.containsKey(product.name())) {
             this.productStorage.remove(product);
-            products.remove(product.getName());
+            products.remove(product.name());
         } else {
             throw new NotFoundException(product);
         }
@@ -145,7 +145,7 @@ public class CommonRepository implements Repository
     @Override
     public Platform getPlatform(Product product)
     {
-        return platforms.get(product.getPlatform());
+        return platforms.get(product.platform());
     }
 
     @Override
@@ -159,7 +159,7 @@ public class CommonRepository implements Repository
     {
         List<Price> pricesOfProduct = new ArrayList<>();
         for (Price price : prices) {
-            if (price.product().equals(product.getName())) {
+            if (price.product().equals(product.name())) {
                 pricesOfProduct.add(price);
             }
         }

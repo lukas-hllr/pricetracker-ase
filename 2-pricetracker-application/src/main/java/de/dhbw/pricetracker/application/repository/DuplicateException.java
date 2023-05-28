@@ -7,11 +7,11 @@ public class DuplicateException extends Exception
 {
     public DuplicateException(Platform platform)
     {
-        super("Die Platform \"" + platform.getName() + "\" existiert bereits.");
+        super("Die Platform \"" + platform.name() + "\" existiert bereits.");
     }
 
     public DuplicateException(Product product)
     {
-        super("Das Produkt \"" + product.getName() + "\" existiert bereits.");
+        super("Das Produkt \"" + product.name() + "\" existiert bereits.");
     }
 }

@@ -18,18 +18,18 @@ class CommonRepositoryTest {
     Repository repository;
 
     static Platform[] testPlatforms = new Platform[]{
-            new CommonPlatform("TestPlatform0", "TestSelector0"),
-            new CommonPlatform("TestPlatform1", "TestSelector1"),
-            new CommonPlatform("TestPlatform2", "TestSelector2"),
-            new CommonPlatform("TestPlatform3", "TestSelector3"),
+            new Platform("TestPlatform0", "TestSelector0"),
+            new Platform("TestPlatform1", "TestSelector1"),
+            new Platform("TestPlatform2", "TestSelector2"),
+            new Platform("TestPlatform3", "TestSelector3"),
     };
 
     static Product[] testProducts = new Product[]{
-            new CommonProduct("TestProduct0", "TestPlatform0", "url0", Currency.EURO),
-            new CommonProduct("TestProduct1", "TestPlatform0", "url1", Currency.US_DOLLAR),
-            new CommonProduct("TestProduct2", "TestPlatform1", "url2", Currency.YEN),
-            new CommonProduct("TestProduct3", "TestPlatform1", "url3", Currency.YUAN),
-            new CommonProduct("TestProduct4", "TestPlatform2", "url4", Currency.EURO),
+            new Product("TestProduct0", "TestPlatform0", "url0", Currency.EURO),
+            new Product("TestProduct1", "TestPlatform0", "url1", Currency.US_DOLLAR),
+            new Product("TestProduct2", "TestPlatform1", "url2", Currency.YEN),
+            new Product("TestProduct3", "TestPlatform1", "url3", Currency.YUAN),
+            new Product("TestProduct4", "TestPlatform2", "url4", Currency.EURO),
     };
     @BeforeEach
     void setUp() {

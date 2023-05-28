@@ -1,7 +1,7 @@
 package de.dhbw.pricetracker.plugins.storage;
 
 import de.dhbw.pricetracker.adapters.storage.Storage;
-import de.dhbw.pricetracker.domain.CommonPlatform;
+import de.dhbw.pricetracker.domain.Platform;
 import de.dhbw.pricetracker.domain.Platform;
 import org.junit.jupiter.api.*;
 
@@ -17,17 +17,17 @@ class CsvPlatformStorageTest {
     Storage<Platform> platformStorage;
 
     static Platform[] testPlatforms = new Platform[]{
-            new CommonPlatform("TestPlatform0", "TestSelector0"),
-            new CommonPlatform("TestPlatform1", "TestSelector1"),
-            new CommonPlatform("TestPlatform2", "TestSelector2"),
-            new CommonPlatform("TestPlatform3", "TestSelector3"),
-            new CommonPlatform("TestPlatform4", "TestSelector4"),
+            new Platform("TestPlatform0", "TestSelector0"),
+            new Platform("TestPlatform1", "TestSelector1"),
+            new Platform("TestPlatform2", "TestSelector2"),
+            new Platform("TestPlatform3", "TestSelector3"),
+            new Platform("TestPlatform4", "TestSelector4"),
     };
 
     static Platform[] initialPlatforms = new Platform[]{
-            new CommonPlatform("TestPlatform0", "TestSelector0"),
-            new CommonPlatform("TestPlatform1", "TestSelector1"),
-            new CommonPlatform("TestPlatform2", "TestSelector2"),
+            new Platform("TestPlatform0", "TestSelector0"),
+            new Platform("TestPlatform1", "TestSelector1"),
+            new Platform("TestPlatform2", "TestSelector2"),
     };
 
     @BeforeEach
@@ -107,8 +107,8 @@ class CsvPlatformStorageTest {
 
     private String platformToCsvString(Platform platform){
         StringJoiner joiner = new StringJoiner(csvDelimiter);
-        joiner.add(platform.getName());
-        joiner.add(platform.getPriceSelector());
+        joiner.add(platform.name());
+        joiner.add(platform.priceIdentifier());
         return joiner.toString();
     }
 

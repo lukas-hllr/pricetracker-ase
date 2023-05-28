@@ -87,7 +87,7 @@ public class CommandLineInterface implements UserInterface
         String name = Console.read("Name: ");
         String priceIdentifier = Console.read("Preisselektor: ");
 
-        listener.onAddPlatformEvent(new CommonPlatform(name, priceIdentifier));
+        listener.onAddPlatformEvent(new Platform(name, priceIdentifier));
     }
 
     @Override
@@ -128,7 +128,7 @@ public class CommandLineInterface implements UserInterface
         try {
             int index = Integer.parseInt(currencyInput);
             Currency currency = currencyContext.get(index);
-            Product product = new CommonProduct(name, platform, url, currency);
+            Product product = new Product(name, platform, url, currency);
             listener.onAddProductEvent(product);
         } catch (NumberFormatException e) {
             inputError(currencyInput);
@@ -159,10 +159,10 @@ public class CommandLineInterface implements UserInterface
             String header = "(" + i + "):";
             header = trim(header, 6);
 
-            String name = products.get(i).getName();
+            String name = products.get(i).name();
             name = trim(name, 25);
 
-            String platform = products.get(i).getPlatform();
+            String platform = products.get(i).platform();
             platform = trim(platform, 20);
 
             Console.print(MessageType.REQUEST, header);
@@ -178,7 +178,7 @@ public class CommandLineInterface implements UserInterface
             String header = "(" + i + "):";
             header = trim(header, 6);
 
-            String name = platforms.get(i).getName();
+            String name = platforms.get(i).name();
             name = trim(name, 25);
 
             Console.print(MessageType.REQUEST, header);
@@ -225,24 +225,24 @@ public class CommandLineInterface implements UserInterface
     @Override
     public void onUpdateStartedEvent(Product product)
     {
-        String name = product.getName();
+        String name = product.name();
         Console.print(MessageType.INFO, "Preis von \"" + name + "\" holen ... ");
     }
 
     @Override
     public void onPriceIncreased(Price newPrice, Product product)
     {
-        Price oldPrice = product.getPrice();
+        Price oldPrice = product.price();
         double priceIncrease = Math.abs(newPrice.value() - oldPrice.value());
         Console.print(MessageType.INFO, "-> Preissteigerung um ");
-        Console.print(MessageType.ERROR, String.format(Locale.US, "%.2f %s", priceIncrease, product.getCurrency().getSymbol()));
+        Console.print(MessageType.ERROR, String.format(Locale.US, "%.2f %s", priceIncrease, product.currency().getSymbol()));
         Console.println(MessageType.INFO, ". neuer Preis: " + newPrice);
     }
 
     @Override
     public void onPriceDecreased(Price newPrice, Product product)
     {
-        Price oldPrice = product.getPrice();
+        Price oldPrice = product.price();
         double priceDecrease = Math.abs(newPrice.value() - oldPrice.value());
         Console.print(MessageType.INFO, "-> Preissenkung um ");
         Console.print(MessageType.SUCCESS, String.format("%f.2", priceDecrease));

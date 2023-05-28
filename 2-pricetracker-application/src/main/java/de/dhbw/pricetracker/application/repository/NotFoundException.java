@@ -7,7 +7,7 @@ public class NotFoundException extends Exception
 {
     public NotFoundException(Platform platform)
     {
-        super("Die Platform \"" + platform.getName() + "\" existiert nicht.");
+        super("Die Platform \"" + platform.name() + "\" existiert nicht.");
     }
 
     public NotFoundException(Class c, String name)

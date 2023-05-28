@@ -1,9 +1,7 @@
 package de.dhbw.pricetracker.plugins.storage;
 
-import de.dhbw.pricetracker.domain.CommonProduct;
 import de.dhbw.pricetracker.domain.Currency;
 import de.dhbw.pricetracker.domain.Price;
-import de.dhbw.pricetracker.domain.Product;
 
 import java.io.File;
 import java.util.Date;

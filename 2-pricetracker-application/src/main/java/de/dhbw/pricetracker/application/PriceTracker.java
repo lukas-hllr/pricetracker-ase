@@ -97,8 +97,8 @@ public class PriceTracker implements UIEventListener
             ui.onUpdateStartedEvent(product);
             Platform platform = repository.getPlatform(product);
             try {
-                double priceValue = scraper.scrapePrice(product.getURL(), platform.getPriceSelector());
-                Price newPrice = new Price(product.getName(), priceValue, product.getCurrency());
+                double priceValue = scraper.scrapePrice(product.url(), platform.priceIdentifier());
+                Price newPrice = new Price(product.name(), priceValue, product.currency());
                 this.handleNewPrice(newPrice, product);
             } catch (IOException | NoPriceFoundException e) {
                 ui.onError(e);
@@ -133,7 +133,7 @@ public class PriceTracker implements UIEventListener
 
     private void handleNewPrice(Price newPrice, Product product)
     {
-        Price oldPrice = product.getPrice();
+        Price oldPrice = product.price();
         try {
             if (newPrice.value() > oldPrice.value()) {
                 ui.onPriceIncreased(newPrice, product);

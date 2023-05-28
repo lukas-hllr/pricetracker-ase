@@ -1,6 +1,5 @@
 package de.dhbw.pricetracker.plugins.storage;
 
-import de.dhbw.pricetracker.domain.CommonProduct;
 import de.dhbw.pricetracker.domain.Currency;
 import de.dhbw.pricetracker.domain.Product;
 
@@ -25,10 +24,10 @@ public class CsvProductStorage extends CsvStorage<Product>
     String entityToCsvString(Product entity)
     {
         StringJoiner joiner = new StringJoiner(csvDelimiter);
-        joiner.add(entity.getName());
-        joiner.add(entity.getPlatform());
-        joiner.add(entity.getURL());
-        joiner.add(entity.getCurrency().name());
+        joiner.add(entity.name());
+        joiner.add(entity.platform());
+        joiner.add(entity.url());
+        joiner.add(entity.currency().name());
         return joiner.toString();
     }
 
@@ -42,6 +41,6 @@ public class CsvProductStorage extends CsvStorage<Product>
         String url = values[2];
         Currency currency = Currency.valueOf(values[3]);
 
-        return new CommonProduct(name, platform, url, currency);
+        return new Product(name, platform, url, currency);
     }
 }

@@ -1,6 +1,6 @@
 package de.dhbw.pricetracker.plugins.storage;
 
-import de.dhbw.pricetracker.domain.CommonPlatform;
+import de.dhbw.pricetracker.domain.Platform;
 import de.dhbw.pricetracker.domain.Platform;
 
 import java.io.File;
@@ -23,8 +23,8 @@ public class CsvPlatformStorage extends CsvStorage<Platform>
     String entityToCsvString(Platform entity)
     {
         StringJoiner joiner = new StringJoiner(csvDelimiter);
-        joiner.add(entity.getName());
-        joiner.add(entity.getPriceSelector());
+        joiner.add(entity.name());
+        joiner.add(entity.priceIdentifier());
         return joiner.toString();
     }
 
@@ -36,6 +36,6 @@ public class CsvPlatformStorage extends CsvStorage<Platform>
         String name = values[0];
         String priceIdentifier = values[1];
 
-        return new CommonPlatform(name, priceIdentifier);
+        return new Platform(name, priceIdentifier);
     }
 }

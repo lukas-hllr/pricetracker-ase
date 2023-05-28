@@ -1,7 +1,7 @@
 package de.dhbw.pricetracker.plugins.storage;
 
 import de.dhbw.pricetracker.adapters.storage.Storage;
-import de.dhbw.pricetracker.domain.CommonProduct;
+import de.dhbw.pricetracker.domain.Product;
 import de.dhbw.pricetracker.domain.Currency;
 import de.dhbw.pricetracker.domain.Product;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,17 +23,17 @@ class CsvProductStorageTest {
     Storage<Product> productStorage;
 
     static Product[] testProducts = new Product[]{
-            new CommonProduct("TestProduct0", "TestPlatform0", "url0", Currency.EURO),
-            new CommonProduct("TestProduct1", "TestPlatform0", "url1", Currency.US_DOLLAR),
-            new CommonProduct("TestProduct2", "TestPlatform1", "url2", Currency.YEN),
-            new CommonProduct("TestProduct3", "TestPlatform1", "url3", Currency.YUAN),
-            new CommonProduct("TestProduct4", "TestPlatform2", "url4", Currency.EURO),
+            new Product("TestProduct0", "TestPlatform0", "url0", Currency.EURO),
+            new Product("TestProduct1", "TestPlatform0", "url1", Currency.US_DOLLAR),
+            new Product("TestProduct2", "TestPlatform1", "url2", Currency.YEN),
+            new Product("TestProduct3", "TestPlatform1", "url3", Currency.YUAN),
+            new Product("TestProduct4", "TestPlatform2", "url4", Currency.EURO),
     };
 
     static Product[] initialProducts = new Product[]{
-            new CommonProduct("TestProduct0", "TestPlatform0", "url0", Currency.EURO),
-            new CommonProduct("TestProduct1", "TestPlatform0", "url1", Currency.US_DOLLAR),
-            new CommonProduct("TestProduct2", "TestPlatform1", "url2", Currency.YEN),
+            new Product("TestProduct0", "TestPlatform0", "url0", Currency.EURO),
+            new Product("TestProduct1", "TestPlatform0", "url1", Currency.US_DOLLAR),
+            new Product("TestProduct2", "TestPlatform1", "url2", Currency.YEN),
     };
 
     @BeforeEach
@@ -115,10 +115,10 @@ class CsvProductStorageTest {
 
     private String productToCsvString(Product product){
         StringJoiner joiner = new StringJoiner(csvDelimiter);
-        joiner.add(product.getName());
-        joiner.add(product.getPlatform());
-        joiner.add(product.getURL());
-        joiner.add(product.getCurrency().name());
+        joiner.add(product.name());
+        joiner.add(product.platform());
+        joiner.add(product.url());
+        joiner.add(product.currency().name());
         return joiner.toString();
     }
 
