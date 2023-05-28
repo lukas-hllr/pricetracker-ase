@@ -45,17 +45,20 @@ public class CommonRepository implements Repository
         products = new HashMap<>();
         for (Product product : productList) {
             List<Price> priceList = prices;
-            Optional<Price> latestPrice = priceList.stream()
-                    .filter(price -> price.product().equals(product.name()))
-                    .sorted((p1, p2) -> p1.timestamp().before(p2.timestamp())?1:-1)
-                    .findFirst();
-            if(latestPrice.isEmpty()){
-                product.setPrice(new Price(product.name(), product.currency()));
-            } else {
-                product.setPrice(latestPrice.get());
-            }
+            Price latestPrice = getLatestPrice(product, priceList);
+            product.setPrice(latestPrice);
             products.put(product.name(), product);
         }
+    }
+
+    private static Price getLatestPrice(Product product, List<Price> priceList)
+    {
+        Price latestPrice = priceList.stream()
+                .filter(price -> price.product().equals(product.name()))
+                .sorted((p1, p2) -> p1.timestamp().before(p2.timestamp())?1:-1)
+                .findFirst()
+                .orElseGet(() -> new Price(product.name(), product.currency()));
+        return latestPrice;
     }
 
     private void initPriceRepository()
