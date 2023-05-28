@@ -3,7 +3,6 @@ package de.dhbw.pricetracker.adapters.htmlscraper;
 import de.dhbw.pricetracker.application.htmlscraper.HtmlScraper;
 import de.dhbw.pricetracker.application.htmlscraper.NoPriceFoundException;
 import de.dhbw.pricetracker.adapters.network.WebClient;
-import de.dhbw.pricetracker.plugins.network.CommonWebClient;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,11 +15,6 @@ public class RegexHtmlScraper implements HtmlScraper
 {
 
     private WebClient client;
-
-    public RegexHtmlScraper()
-    {
-        this.client = new CommonWebClient();
-    }
 
     public RegexHtmlScraper(WebClient client)
     {

@@ -5,7 +5,6 @@ import de.dhbw.pricetracker.application.repository.DuplicateException;
 import de.dhbw.pricetracker.application.repository.NotFoundException;
 import de.dhbw.pricetracker.application.repository.Repository;
 import de.dhbw.pricetracker.domain.*;
-import de.dhbw.pricetracker.plugins.storage.CsvPlatformStorage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

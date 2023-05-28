@@ -37,7 +37,7 @@ public class ThreadedTimeKeeper implements TimeKeeper
     @Override
     public void start()
     {
-        task = executor.scheduleAtFixedRate(runnable, 0, interval, TimeUnit.MINUTES);
+        task = executor.scheduleAtFixedRate(runnable, interval, interval, TimeUnit.MINUTES);
     }
 
     @Override

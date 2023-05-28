@@ -7,31 +7,18 @@ import de.dhbw.pricetracker.application.repository.Repository;
 import de.dhbw.pricetracker.domain.Platform;
 import de.dhbw.pricetracker.domain.Price;
 import de.dhbw.pricetracker.domain.Product;
-import de.dhbw.pricetracker.plugins.storage.CsvPlatformStorage;
-import de.dhbw.pricetracker.plugins.storage.CsvPriceStorage;
-import de.dhbw.pricetracker.plugins.storage.CsvProductStorage;
 
 import java.util.*;
 
 public class CommonRepository implements Repository
 {
 
-    private Storage<Platform> platformStorage;
-    private Storage<Product> productStorage;
-    private Storage<Price> priceStorage;
+    private final Storage<Platform> platformStorage;
+    private final Storage<Product> productStorage;
+    private final Storage<Price> priceStorage;
     private Map<String, Platform> platforms;
     private Map<String, Product> products;
     private List<Price> prices;
-
-    public CommonRepository()
-    {
-        this.platformStorage = new CsvPlatformStorage();
-        this.productStorage = new CsvProductStorage();
-        this.priceStorage = new CsvPriceStorage();
-        initPlatformRepository();
-        initPriceRepository();
-        initProductRepository();
-    }
 
     public CommonRepository(Storage<Platform> platformStorage, Storage<Product> productStorage, Storage<Price> priceStorage)
     {
@@ -58,12 +45,15 @@ public class CommonRepository implements Repository
         products = new HashMap<>();
         for (Product product : productList) {
             List<Price> priceList = prices;
-            prices.add(new Price(product.name(), product.currency()));
-            Price latestPrice = priceList.stream()
+            Optional<Price> latestPrice = priceList.stream()
                     .filter(price -> price.product().equals(product.name()))
                     .sorted((p1, p2) -> p1.timestamp().before(p2.timestamp())?1:-1)
-                    .findFirst().get();
-            product.setPrice(latestPrice);
+                    .findFirst();
+            if(latestPrice.isEmpty()){
+                product.setPrice(new Price(product.name(), product.currency()));
+            } else {
+                product.setPrice(latestPrice.get());
+            }
             products.put(product.name(), product);
         }
     }
